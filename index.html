@@ -989,13 +989,11 @@ function renderCards(){
     visible.forEach(c=>{
       const sku=getSKU(c.title);
       if(sku!==lastSKU){
-        if(lastSKU!=='') html+=`</div>`;
-        html+=`<div style="grid-column:1/-1;margin:${lastSKU?'16px':0} 0 6px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${sku}</span></div><div style="display:contents">`;
+        html+=`<div style="grid-column:1/-1;margin:${lastSKU?'16px':0} 0 6px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${sku}</span></div>`;
         lastSKU=sku;
       }
       html+=renderCard(c,isLeaderOrCreator);
     });
-    if(lastSKU!='') html+=`</div>`;
     grid.innerHTML=html;
   } else {
     grid.innerHTML=visible.map(c=>renderCard(c,false)).join('');
