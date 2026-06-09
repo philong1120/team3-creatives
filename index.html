@@ -1034,7 +1034,7 @@ function renderCard(c,showAdserStatuses){
       <div class="card-footer">
         <span class="card-date">${fmtDate(c.createdAt)}</span>
         ${c.market?`<span style="font-size:10px;font-weight:800;padding:1px 6px;border-radius:3px;background:var(--blue-dim);color:var(--blue)">${c.market}</span>`:''}
-        ${c.postId&&['oncamp','offcamp'].includes(c.status)?`<span style="font-size:10px;font-family:monospace;color:var(--accent)">ID: ${c.postId}${c.postIdLocked?' 🔒':''}</span>`:''}
+        ${(()=>{const pid=(c.postIds||{})[currentUser.name]||'';return pid&&['oncamp','offcamp'].includes(getStatusForAdser(c,currentUser.name))?'<span style="font-size:10px;font-family:monospace;color:var(--accent)">ID: '+pid+'</span>':'';})()}
         ${pitchCount?`<span style="font-size:11px;color:var(--text2)">💬 ${pitchCount}</span>`:''}
       </div>
     </div>
@@ -1075,13 +1075,18 @@ function openDetail(id){
     else marketEl.style.display='none';
   }
 
-  // Post ID — show only oncamp/offcamp
+  // Post ID — show only oncamp/offcamp, per adser
   const postIdWrap=document.getElementById('postIdWrap');
-  const isOnOffCamp=['oncamp','offcamp'].includes(c.status);
-  postIdWrap.style.display=isOnOffCamp?'block':'none';
-  if(isOnOffCamp){
-    const locked=c.postIdLocked||false;
-    document.getElementById('postIdInput').value=c.postId||'';
+  const myAdserStatus=getStatusForAdser(c,currentUser.name);
+  const isOnOffCamp=['oncamp','offcamp'].includes(myAdserStatus)||['oncamp','offcamp'].includes(c.status);
+  const isAdserOrLeader=currentUser.role==='adser'||currentUser.isLeader;
+  postIdWrap.style.display=(isOnOffCamp&&isAdserOrLeader)?'block':'none';
+  if(isOnOffCamp&&isAdserOrLeader){
+    const postIds=c.postIds||{};
+    const postIdLocks=c.postIdLocks||{};
+    const myPostId=postIds[currentUser.name]||'';
+    const locked=postIdLocks[currentUser.name]||false;
+    document.getElementById('postIdInput').value=myPostId;
     document.getElementById('postIdInput').disabled=locked;
     document.getElementById('postIdLockBtn').textContent=locked?'🔒':'✓';
     const lockedView=document.getElementById('postIdLockedView');
@@ -1089,7 +1094,7 @@ function openDetail(id){
     if(locked){
       lockedView.style.display='flex';
       inputRow.style.display='none';
-      document.getElementById('postIdLockedText').textContent=c.postId||'—';
+      document.getElementById('postIdLockedText').textContent=myPostId||'—';
     } else {
       lockedView.style.display='none';
       inputRow.style.display='flex';
@@ -1287,7 +1292,7 @@ async function submitUpload(){
     videoUrl:document.getElementById('uVideo').value.trim(),
     idea:document.getElementById('uIdea').value.trim(),
     script:document.getElementById('uScript').value.trim(),
-    tags,market:document.getElementById('uMarket').value,status:'pending',adserStatuses:{},createdAt:Date.now(),pitches:[],rejectVotes:[],pickedBy:[],postId:'',postIdLocked:false
+    tags,market:document.getElementById('uMarket').value,status:'pending',adserStatuses:{},createdAt:Date.now(),pitches:[],rejectVotes:[],pickedBy:[],postIds:{},postIdLocks:{}
   };
   showLoading(true);
   await saveNewCreative(creative);
@@ -1421,8 +1426,10 @@ async function togglePostIdLock(){
   if(!c) return;
   const val=document.getElementById('postIdInput').value.trim();
   if(!val){alert('Nhập Post ID trước khi khóa.');return;}
-  c.postId=val;
-  c.postIdLocked=true;
+  if(!c.postIds) c.postIds={};
+  if(!c.postIdLocks) c.postIdLocks={};
+  c.postIds[currentUser.name]=val;
+  c.postIdLocks[currentUser.name]=true;
   await updateCreativeRemote(c);
   openDetail(currentCreative);
 }
@@ -1430,7 +1437,8 @@ async function unlockPostId(){
   const data=getData();
   const c=data.find(x=>x.id===currentCreative);
   if(!c) return;
-  c.postIdLocked=false;
+  if(!c.postIdLocks) c.postIdLocks={};
+  c.postIdLocks[currentUser.name]=false;
   await updateCreativeRemote(c);
   openDetail(currentCreative);
 }
