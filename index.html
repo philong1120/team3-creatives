@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0f; --surface:#111118; --surface2:#18181f; --surface3:#202028;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.14);
+  --text:#ffffff; --text2:#d4d2dc; --text3:#7c7a85;
+  --accent:#c8f135; --accent-dim:rgba(200,241,53,0.12);
+  --red:#ff5f5f; --red-dim:rgba(255,95,95,0.1);
+  --orange:#ff9f43; --orange-dim:rgba(255,159,67,0.1);
+  --blue:#5ba4ff; --blue-dim:rgba(91,164,255,0.1);
+  --purple:#b98cff; --purple-dim:rgba(185,140,255,0.1);
+  --green:#4cde8a; --green-dim:rgba(76,222,138,0.1);
+  --yellow:#ffd166; --yellow-dim:rgba(255,209,102,0.1);
+  --r:10px; --r-sm:6px;
+  --font:'Nunito',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh;}
+
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:40px;width:100%;max-width:380px;text-align:center;}
+.login-logo{font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;}
+.login-logo span{color:var(--accent);}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:32px;}
+.login-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;text-align:left;}
+.login-select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:14px;font-weight:600;padding:12px 14px;outline:none;cursor:pointer;margin-bottom:16px;appearance:none;}
+.login-select option{background:var(--surface2);}
+.pin-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.pin-dot{width:44px;height:54px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--text);letter-spacing:.05em;transition:border-color .15s;}
+.pin-dot.filled{border-color:var(--accent);}
+.pin-dot.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,241,53,0.2);}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.pin-key{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:16px;font-weight:700;padding:14px;cursor:pointer;transition:all .1s;}
+.pin-key:hover{background:var(--surface3);border-color:var(--border2);}
+.pin-key:active{transform:scale(.95);}
+.pin-key.del{color:var(--red);}
+.login-error{font-size:12px;color:var(--red);margin-bottom:8px;min-height:18px;}
+.btn-login{width:100%;background:var(--accent);color:#000;border:none;border-radius:var(--r-sm);font-family:var(--font);font-size:14px;font-weight:800;padding:13px;cursor:pointer;transition:background .15s;}
+.btn-login:hover{background:#d4f54a;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:12px;height:56px;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-size:15px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;}
+.topbar-logo span{color:var(--accent);}
+.topbar-divider{width:1px;height:20px;background:var(--border);}
+.user-badge{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;}
+.user-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#000;}
+.user-name{font-size:12px;font-weight:700;}
+.user-role{font-size:10px;color:var(--text3);font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.topbar-stats{display:flex;gap:16px;}
+.stat-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);}
+.stat-dot{width:7px;height:7px;border-radius:50%;}
+.stat-num{font-weight:700;color:var(--text);}
+.btn-settings{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text2);font-family:var(--font);font-size:12px;font-weight:600;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;}
+.btn-settings:hover{color:var(--text);border-color:var(--border2);}
+.btn-logout{background:transparent;border:none;color:var(--text3);font-family:var(--font);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s;}
+.btn-logout:hover{color:var(--text);}
+
+/* ── MAIN ── */
+.main{max-width:1280px;margin:0 auto;padding:24px;}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.toolbar-title{font-size:18px;font-weight:800;letter-spacing:-.02em;flex:1;}
+.toolbar-sub{font-size:12px;color:var(--text3);font-weight:400;}
+.filter-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:3px;}
+.filter-tab{padding:5px 12px;border:none;background:transparent;color:var(--text2);font-family:var(--font);font-size:12px;font-weight:600;border-radius:5px;cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.filter-tab.active{background:var(--surface3);color:var(--text);}
+.tab-count{background:var(--surface3);color:var(--text3);font-size:10px;font-weight:800;padding:1px 6px;border-radius:3px;min-width:16px;text-align:center;}
+.filter-tab.active .tab-count{background:rgba(255,255,255,0.1);color:var(--text2);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-sm);border:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-primary{background:var(--accent);color:#000;}
+.btn-primary:hover{background:#d4f54a;}
+.btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--text2);}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text);}
+
+/* ── CARDS ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.creative-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;}
+.creative-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.creative-card.status-picked{border-color:rgba(76,222,138,0.3);}
+.creative-card.status-rejected{border-color:rgba(255,95,95,0.2);}
+.creative-card.status-oncamp{border-color:rgba(91,164,255,0.3);}
+.card-thumb{aspect-ratio:4/3;background:var(--surface2);position:relative;display:flex;align-items:center;justify-content:center;}
+.card-thumb-label{font-size:12px;color:var(--text3);text-align:center;padding:8px;}
+.card-status-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;padding:3px 8px;border-radius:4px;letter-spacing:.05em;text-transform:uppercase;}
+.card-reject-partial{position:absolute;bottom:8px;left:8px;font-size:10px;background:rgba(255,95,95,0.15);color:var(--red);padding:2px 7px;border-radius:3px;font-weight:700;}
+.card-body{padding:14px;}
+.card-title{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.3;margin-bottom:2px;}
+.card-creator{font-size:11px;color:var(--text3);font-weight:600;}
+.card-idea{font-size:12px;color:var(--text2);line-height:1.5;margin:8px 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.card-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;background:var(--surface3);color:var(--text2);}
+.card-footer{display:flex;align-items:center;gap:6px;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.card-date{font-size:11px;color:var(--text3);margin-right:auto;}
+.picker-badge{font-size:10px;font-weight:800;color:var(--green);background:var(--green-dim);padding:1px 7px;border-radius:3px;}
+.s-pending{background:var(--yellow-dim);color:var(--yellow);}
+.s-picked{background:var(--green-dim);color:var(--green);}
+.s-rejected{background:var(--red-dim);color:var(--red);}
+.s-oncamp{background:var(--blue-dim);color:var(--blue);}
+.s-offcamp{background:var(--surface3);color:var(--text2);}
+.card-brief-badge{position:absolute;top:10px;left:10px;font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;background:rgba(255,159,67,0.18);color:var(--orange);letter-spacing:.05em;border:1px solid rgba(255,159,67,0.3);}
+.creative-card.from-brief{border-color:rgba(255,159,67,0.25);}
+.creative-card.from-brief:hover{border-color:rgba(255,159,67,0.5);}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:1000px;max-height:90vh;overflow-y:auto;transform:translateY(12px);transition:transform .25s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;position:sticky;top:0;background:var(--surface);z-index:1;}
+.modal-title{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px;}
+.modal-meta{font-size:12px;color:var(--text2);display:flex;gap:12px;}
+.modal-body{display:grid;grid-template-columns:400px 1fr;gap:0;}
+.modal-video-col{border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;gap:14px;}
+.modal-video-wrap{width:100%;background:#000;border-radius:var(--r-sm);overflow:hidden;padding:8px;}
+.modal-video-wrap iframe{width:100%;height:420px;display:block;border:none;border-radius:4px;}
+.modal-video-wrap .no-video{height:280px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:13px;}
+.info-label{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;font-weight:700;}
+.info-text{font-size:13px;color:var(--text2);line-height:1.6;}
+.script-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.7;max-height:120px;overflow-y:auto;font-style:italic;}
+.modal-info-col{padding:20px;display:flex;flex-direction:column;gap:14px;}
+.modal-divider{height:1px;background:var(--border);}
+
+/* Status flow */
+.status-flow{display:flex;gap:0;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.flow-step{flex:1;padding:8px 4px;text-align:center;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);border-right:1px solid var(--border);}
+.flow-step:last-child{border-right:none;}
+.s-pending-flow{background:var(--yellow-dim);color:var(--yellow);}
+.s-picked-flow{background:var(--green-dim);color:var(--green);}
+.s-rejected-flow{background:var(--red-dim);color:var(--red);}
+.s-oncamp-flow{background:var(--blue-dim);color:var(--blue);}
+.s-offcamp-flow{background:var(--surface3);color:var(--text2);}
+
+/* Actions */
+.action-label{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:700;}
+.action-row{display:flex;gap:8px;}
+.btn-action{flex:1;padding:9px 12px;border-radius:var(--r-sm);font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px;border:1px solid transparent;}
+.btn-pick{background:var(--green-dim);border-color:rgba(76,222,138,0.3);color:var(--green);}
+.btn-pick.active,.btn-pick:hover{background:var(--green);color:#000;border-color:var(--green);}
+.btn-oncamp{background:var(--blue-dim);border-color:rgba(91,164,255,0.3);color:var(--blue);}
+.btn-oncamp.active,.btn-oncamp:hover{background:var(--blue);color:#000;}
+.btn-offcamp{background:var(--surface2);border-color:var(--border2);color:var(--text2);}
+.btn-offcamp.active,.btn-offcamp:hover{background:var(--surface3);color:var(--text);}
+.btn-reject-action{background:var(--red-dim);border-color:rgba(255,95,95,0.3);color:var(--red);}
+.btn-reject-action:hover{background:rgba(255,95,95,0.2);}
+
+/* Reject panel */
+.reject-panel{background:var(--surface2);border:1px solid rgba(255,95,95,0.2);border-radius:var(--r-sm);padding:12px;display:none;flex-direction:column;gap:8px;}
+.reject-panel.show{display:flex;}
+.reject-textarea{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:9px 12px;resize:vertical;min-height:70px;outline:none;}
+.reject-textarea:focus{border-color:var(--red);}
+.reject-votes{display:flex;flex-direction:column;gap:6px;}
+.reject-vote-item{background:var(--red-dim);border:1px solid rgba(255,95,95,0.15);border-radius:var(--r-sm);padding:8px 12px;}
+.reject-vote-name{font-size:10px;font-weight:800;color:var(--red);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+.reject-vote-reason{font-size:12px;color:var(--text2);}
+
+/* Pitch */
+.pitch-title{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.pitch-thread{display:flex;flex-direction:column;gap:7px;max-height:220px;overflow-y:auto;margin-bottom:10px;}
+.pitch-msg{padding:9px 12px;border-radius:var(--r-sm);font-size:13px;line-height:1.5;}
+.pitch-msg.creator{background:var(--purple-dim);border:1px solid rgba(185,140,255,0.2);border-left:3px solid var(--purple);}
+.pitch-msg.adser{background:var(--blue-dim);border:1px solid rgba(91,164,255,0.2);border-left:3px solid var(--blue);}
+.pitch-msg-header{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.pitch-sender{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+.pitch-sender.creator{color:var(--purple);}
+.pitch-sender.adser{color:var(--blue);}
+.pitch-time{font-size:10px;color:var(--text3);margin-left:auto;}
+.pitch-text{color:var(--text2);}
+.pitch-toolbar{display:flex;align-items:center;gap:3px;background:var(--surface3);border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 6px;margin-bottom:6px;}
+.ptool{background:transparent;border:none;color:var(--text2);font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;padding:3px 7px;border-radius:4px;transition:all .15s;line-height:1;}
+.ptool:hover{background:var(--surface2);color:var(--text);}
+.ptool-divider{width:1px;height:14px;background:var(--border2);margin:0 3px;}
+.pcolor{width:16px;height:16px;border-radius:50%;background:var(--c);padding:0;border:2px solid transparent;}
+.pcolor:hover{border-color:rgba(255,255,255,0.5);}
+.pitch-editor{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:9px 12px;min-height:40px;max-height:120px;overflow-y:auto;outline:none;line-height:1.6;}
+.pitch-editor:focus{border-color:var(--accent);}
+.pitch-editor:empty:before{content:attr(data-placeholder);color:var(--text3);pointer-events:none;}
+.pitch-input-wrap{display:flex;gap:8px;align-items:flex-end;}
+.btn-send{background:var(--accent);color:#000;border:none;border-radius:var(--r-sm);padding:9px 14px;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;}
+.btn-send:hover{background:#d4f54a;}
+
+/* Upload form */
+.upload-form{display:flex;flex-direction:column;gap:14px;padding:24px;}
+.form-row{display:flex;flex-direction:column;gap:5px;}
+.form-label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;}
+.form-input,.form-textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;outline:none;width:100%;}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent);}
+.form-textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;}
+
+/* Settings */
+.settings-wrap{padding:24px;display:flex;flex-direction:column;gap:20px;}
+.settings-section-title{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.member-list{display:flex;flex-direction:column;gap:8px;}
+.member-row{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;}
+.member-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#000;flex-shrink:0;}
+.member-name{font-weight:700;font-size:13px;flex:1;}
+.member-role-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:3px;letter-spacing:.05em;text-transform:uppercase;}
+.role-adser{background:var(--blue-dim);color:var(--blue);}
+.role-creator{background:var(--purple-dim);color:var(--purple);}
+.role-leader{background:var(--accent-dim);color:var(--accent);}
+.member-actions{display:flex;gap:6px;}
+.member-select{background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--font);font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;cursor:pointer;outline:none;}
+.btn-remove{background:var(--red-dim);border:1px solid rgba(255,95,95,0.2);color:var(--red);font-family:var(--font);font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;cursor:pointer;}
+.btn-pin-change{background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--font);font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;cursor:pointer;}
+.pin-change-row{display:none;align-items:center;gap:6px;margin-top:6px;padding:8px 10px;background:var(--bg);border-radius:var(--r-sm);}
+.pin-change-row input{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--font);font-size:13px;padding:6px 10px;width:90px;outline:none;letter-spacing:.2em;text-align:center;}
+.pin-change-row input:focus{border-color:var(--accent);}
+.add-member-form{display:flex;gap:8px;align-items:flex-end;margin-top:4px;flex-wrap:wrap;}
+.add-member-form .form-input{flex:1;min-width:120px;}
+.add-member-form select{background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;border-radius:var(--r-sm);outline:none;cursor:pointer;}
+
+/* Empty */
+.empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3);}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* ── PAGE NAV ── */
+.page-nav{display:flex;gap:4px;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;}
+.page-nav-btn{padding:12px 18px;border:none;background:transparent;color:var(--text3);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.page-nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.page-nav-btn:hover:not(.active){color:var(--text2);}
+
+/* ── BRIEF CARDS ── */
+.brief-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:border-color .2s,transform .2s;position:relative;}
+.brief-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.brief-card.bc-open{border-color:rgba(200,241,53,0.3);}
+.brief-card.bc-done{border-color:rgba(76,222,138,0.3);opacity:.75;}
+.brief-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.brief-sku-badge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:4px;background:var(--accent-dim);color:var(--accent);letter-spacing:.06em;white-space:nowrap;flex-shrink:0;}
+.brief-title{font-size:14px;font-weight:700;line-height:1.3;flex:1;}
+.brief-market{font-size:10px;font-weight:800;padding:2px 7px;border-radius:3px;background:var(--blue-dim);color:var(--blue);letter-spacing:.05em;}
+.brief-meta{font-size:11px;color:var(--text3);margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.brief-outline{font-size:12px;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.brief-footer{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.brief-status-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:3px;letter-spacing:.04em;}
+.bs-open{background:var(--yellow-dim);color:var(--yellow);}
+.bs-claimed{background:var(--blue-dim);color:var(--blue);}
+.bs-done{background:var(--green-dim);color:var(--green);}
+.brief-claimers{display:flex;gap:4px;flex-wrap:wrap;}
+.brief-claimer-tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;background:var(--purple-dim);color:var(--purple);}
+
+/* ── BRIEF MODAL ── */
+.brief-modal-body{padding:24px;display:flex;flex-direction:column;gap:16px;}
+.brief-section{display:flex;flex-direction:column;gap:6px;}
+.brief-section-label{font-size:10px;font-weight:800;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+.brief-content-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
+.brief-keywords{display:flex;gap:6px;flex-wrap:wrap;}
+.brief-keyword{font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;background:var(--orange-dim);color:var(--orange);}
+
+/* Plan checklist */
+.plan-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:border-color .2s;}
+.plan-item:hover{border-color:var(--border2);}
+.plan-item.done{border-color:rgba(76,222,138,0.25);opacity:.8;}
+.plan-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:2px;transition:all .15s;}
+.plan-item.done .plan-check{background:var(--green);border-color:var(--green);color:#000;}
+.plan-body{flex:1;}
+.plan-sku{font-size:10px;font-weight:800;color:var(--accent);letter-spacing:.06em;margin-bottom:2px;}
+.plan-name{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:4px;}
+.plan-by{font-size:11px;color:var(--text3);}
+.plan-market{font-size:10px;font-weight:800;padding:1px 6px;border-radius:3px;background:var(--blue-dim);color:var(--blue);margin-left:auto;flex-shrink:0;}
+.tt{position:relative;cursor:help;display:inline-flex;align-items:center;justify-content:center;}
+#cb-tooltip{position:fixed;background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:11px;line-height:1.5;padding:7px 10px;border-radius:6px;max-width:220px;text-align:center;pointer-events:none;z-index:99999;font-family:'Nunito',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,0.5);display:none;}
+@media(max-width:600px){
+  .modal-body{grid-template-columns:1fr;}
+  .modal-video-col{border-right:none;border-bottom:1px solid var(--border);}
+  .topbar-stats{display:none;}
+  .cards-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo">⚡ <span>Creative</span>Board</div>
+    <div class="login-sub" id="loginSub">Chọn tên để tiếp tục</div>
+
+    <!-- Step 1: chọn tên -->
+    <div id="loginStep1">
+      <div class="login-label">Bạn là ai?</div>
+      <select class="login-select" id="loginSelect" onchange="onNameSelect()">
+        <option value="">— Chọn tên —</option>
+      </select>
+    </div>
+
+    <!-- Step 2: nhập PIN -->
+    <div id="loginStep2" style="display:none">
+      <div class="login-label" style="text-align:center;margin-bottom:14px">Nhập mã PIN</div>
+      <div class="pin-row" id="pinRow">
+        <div class="pin-dot active" id="pd0">·</div>
+        <div class="pin-dot" id="pd1">·</div>
+        <div class="pin-dot" id="pd2">·</div>
+        <div class="pin-dot" id="pd3">·</div>
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <div class="pin-keypad">
+        <button class="pin-key" onclick="pinPress('1')">1</button>
+        <button class="pin-key" onclick="pinPress('2')">2</button>
+        <button class="pin-key" onclick="pinPress('3')">3</button>
+        <button class="pin-key" onclick="pinPress('4')">4</button>
+        <button class="pin-key" onclick="pinPress('5')">5</button>
+        <button class="pin-key" onclick="pinPress('6')">6</button>
+        <button class="pin-key" onclick="pinPress('7')">7</button>
+        <button class="pin-key" onclick="pinPress('8')">8</button>
+        <button class="pin-key" onclick="pinPress('9')">9</button>
+        <button class="pin-key del" onclick="pinBack()">←</button>
+        <button class="pin-key" onclick="pinPress('0')">0</button>
+        <button class="pin-key" onclick="backToName()" style="font-size:11px;color:var(--text3)">↩</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen" style="display:none">
+  <header class="topbar">
+    <div class="topbar-logo">⚡ <span>Creative</span>Board</div>
+    <div class="topbar-divider"></div>
+    <div class="user-badge" id="userBadge"></div>
+    <div class="topbar-right">
+      <div class="topbar-stats" id="topbarStats"></div>
+      <button class="btn-settings" id="btnSettings" onclick="openSettings()" style="display:none">⚙ Settings</button>
+      <button class="btn-logout" onclick="doLogout()">Đăng xuất</button>
+    </div>
+  </header>
+
+  <!-- PAGE NAV -->
+  <nav class="page-nav" id="pageNav"></nav>
+
+  <main class="main" id="pageCreatives">
+    <div class="toolbar">
+      <div>
+        <div class="toolbar-title" id="toolbarTitle">Creative Library</div>
+        <div class="toolbar-sub" id="toolbarSub"></div>
+      </div>
+      <div class="filter-tabs" id="filterTabs"></div>
+      <button class="btn btn-primary" id="uploadBtn" onclick="openUpload()" style="display:none">+ Upload</button>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </main>
+
+  <!-- PAGE: BRIEF -->
+  <main class="main" id="pageBrief" style="display:none">
+    <div class="toolbar">
+      <div>
+        <div class="toolbar-title">Content Brief</div>
+        <div class="toolbar-sub" id="briefSub"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="setBriefFilter('all')" id="bfAll">Tất cả <span class="tab-count" id="bfCntAll">0</span></button>
+          <button class="filter-tab" onclick="setBriefFilter('open')" id="bfOpen">Cần làm <span class="tab-count" id="bfCntOpen">0</span></button>
+          <button class="filter-tab" onclick="setBriefFilter('done')" id="bfDone">Hoàn thành <span class="tab-count" id="bfCntDone">0</span></button>
+        </div>
+        <button class="btn btn-primary" id="btnAddBrief" onclick="openBriefForm()" style="display:none">+ Tạo Brief</button>
+      </div>
+    </div>
+    <div class="cards-grid" id="briefGrid"></div>
+  </main>
+
+  <!-- PAGE: PLAN -->
+  <main class="main" id="pagePlan" style="display:none">
+    <div class="toolbar">
+      <div>
+        <div class="toolbar-title">Plan của tôi</div>
+        <div class="toolbar-sub" id="planSub"></div>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setPlanFilter('all')" id="pfAll">Tất cả</button>
+        <button class="filter-tab" onclick="setPlanFilter('todo')" id="pfTodo">Chưa xong</button>
+        <button class="filter-tab" onclick="setPlanFilter('done')" id="pfDone">Đã xong</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px" id="planList"></div>
+  </main>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="flex:1">
+        <div class="modal-title" id="dTitle"></div>
+        <div class="modal-meta"><span id="dCreator"></span><span id="dDate"></span></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-ghost" id="btnEditCard" onclick="openEditCard()" style="display:none;font-size:12px;padding:6px 12px">✏️ Edit</button>
+        <button class="btn" id="btnDeleteCard" onclick="deleteCard()" style="display:none;font-size:12px;padding:6px 12px;background:var(--red-dim);border:1px solid rgba(255,95,95,0.3);color:var(--red)">🗑 Xóa</button>
+        <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeDetail()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-video-col">
+        <div id="dDriveLink" style="display:none;margin-bottom:4px">
+          <a id="dDriveLinkBtn" href="#" target="_blank" style="display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;">
+            ↗ Mở trên Google Drive
+          </a>
+        </div>
+        <div class="modal-video-wrap" id="dVideoWrap"></div>
+        <div><div class="info-label">Ý tưởng</div><div class="info-text" id="dIdea"></div></div>
+        <div><div class="info-label">Script (VI)</div><div class="script-box" id="dScript"></div></div>
+        <div><div class="info-label">Tags</div><div class="card-tags" id="dTags"></div></div>
+        <div id="dMarketWrap" style="margin-top:-4px"><span id="dMarketBadge" style="display:none;font-size:11px;font-weight:800;padding:3px 10px;border-radius:4px;background:var(--blue-dim);color:var(--blue);letter-spacing:.06em"></span></div>
+      </div>
+      <div class="modal-info-col">
+
+        <div>
+          <div class="info-label" style="margin-bottom:6px">Trạng thái</div>
+          <div class="status-flow" id="statusFlow"></div>
+          <div id="pickedByWrap" style="display:none;margin-top:8px">
+            <div class="info-label" style="margin-bottom:4px">Picked bởi</div>
+            <div id="pickedByList" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+          </div>
+          <!-- Per-adser statuses for LONG and Creator -->
+          <div id="adserStatusesWrap" style="display:none;margin-top:10px">
+            <div class="info-label" style="margin-bottom:6px">Trạng thái theo từng adser</div>
+            <div id="adserStatusesList" style="display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+        </div>
+
+        <div id="adserActions" style="display:none">
+          <div class="action-label" style="display:flex;align-items:center;gap:6px">
+            Quyết định của bạn
+            <span class="tt" data-tip="Sau khi bấm, vui lòng đợi ~10 giây. Không bấm lại trong lúc đang tải.">⏱</span>
+          </div>
+          <div class="action-row" style="margin-bottom:8px">
+            <button class="btn-action btn-pick" id="btnPick" onclick="togglePick()">
+              <span class="tt" data-tip="Chọn video này để chạy ads. Bấm lại để bỏ chọn.">✓ Pick</span>
+            </button>
+            <button class="btn-action btn-oncamp" id="btnOncamp" onclick="doAction('oncamp')">
+              <span class="tt" data-tip="Video đã được lên camp và đang chạy ads.">🚀 On Camp</span>
+            </button>
+          </div>
+          <div class="action-row" style="margin-bottom:8px">
+            <button class="btn-action btn-offcamp" id="btnOffcamp" onclick="doAction('offcamp')">
+              <span class="tt" data-tip="Camp đã tắt, video ngưng chạy ads.">📴 Off Camp</span>
+            </button>
+            <button class="btn-action btn-reject-action" onclick="toggleRejectPanel()">
+              <span class="tt" data-tip="Từ chối video này. Bắt buộc nhập lý do.">✕ Reject</span>
+            </button>
+          </div>
+          <div class="reject-panel" id="rejectPanel">
+            <div class="info-label">Lý do reject</div>
+            <textarea class="reject-textarea" id="rejectReasonInput" placeholder="Nhập lý do..."></textarea>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:12px" onclick="toggleRejectPanel()">Hủy</button>
+              <button class="btn" style="flex:1;justify-content:center;background:var(--red);color:#fff;font-size:12px" onclick="submitReject()">Xác nhận</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="rejectVotesWrap" style="display:none">
+          <div class="info-label" style="margin-bottom:6px">Reject votes (<span id="rejectVoteCount">0</span>/3)</div>
+          <div class="reject-votes" id="rejectVotes"></div>
+        </div>
+
+        <!-- POST ID — hiện khi On Camp / Off Camp -->
+        <div id="postIdWrap" style="display:none">
+          <div class="info-label" style="margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            🔗 Post ID
+            <span class="tt" data-tip="ID của bài đăng quảng cáo trên Facebook Ads Manager. Nhập xong bấm ✓ để khóa.">?</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input id="postIdInput" class="form-input" style="flex:1;font-family:var(--mono);font-size:13px" placeholder="Nhập Post ID...">
+            <button id="postIdLockBtn" onclick="togglePostIdLock()" class="tt" data-tip="Khóa Post ID lại. Bấm ✕ Sửa để mở khóa nếu nhập sai." style="width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--surface2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✓</button>
+          </div>
+          <div id="postIdLockedView" style="display:none;margin-top:6px;display:none">
+            <div style="display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:8px 12px">
+              <span id="postIdLockedText" style="flex:1;font-family:var(--mono);font-size:13px;color:var(--accent)"></span>
+              <button onclick="unlockPostId()" style="font-size:11px;color:var(--red);background:transparent;border:none;cursor:pointer">✕ Sửa</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div>
+          <div class="pitch-title">💬 Pitch / Discussion <span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0" id="pitchCount"></span></div>
+          <div class="pitch-thread" id="pitchThread"></div>
+          <div class="pitch-toolbar">
+            <button class="ptool" onclick="pFmt('bold')"><b>B</b></button>
+            <button class="ptool" onclick="pFmt('italic')"><i>I</i></button>
+            <div class="ptool-divider"></div>
+            <button class="ptool pcolor" style="--c:#ffffff" onclick="pColor('#ffffff')"></button>
+            <button class="ptool pcolor" style="--c:#c8f135" onclick="pColor('#c8f135')"></button>
+            <button class="ptool pcolor" style="--c:#ffd166" onclick="pColor('#ffd166')"></button>
+            <button class="ptool pcolor" style="--c:#ff5f5f" onclick="pColor('#ff5f5f')"></button>
+            <button class="ptool pcolor" style="--c:#5ba4ff" onclick="pColor('#5ba4ff')"></button>
+            <button class="ptool pcolor" style="--c:#b98cff" onclick="pColor('#b98cff')"></button>
+          </div>
+          <div class="pitch-input-wrap">
+            <div class="pitch-editor" id="pitchEditor" contenteditable="true" data-placeholder="Nhập tin nhắn..."
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendPitch()}"></div>
+            <button class="btn-send" onclick="sendPitch()">Gửi</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div style="flex:1"><div class="modal-title">Upload Creative</div></div>
+      <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeUpload()">✕</button>
+    </div>
+    <div class="upload-form">
+      <div class="form-row"><div class="form-label">Tên Creative</div><input class="form-input" id="uTitle" placeholder="VD: Hook Pain v2 — Teppan"></div>
+      <div class="form-row"><div class="form-label">Link Video (Google Drive)</div><input class="form-input" id="uVideo" placeholder="https://drive.google.com/file/d/..."></div>
+      <div class="form-row"><div class="form-label">Ý tưởng / Angle</div><textarea class="form-textarea" id="uIdea" placeholder="Mô tả ý tưởng, hook, angle..."></textarea></div>
+      <div class="form-row"><div class="form-label">Script (Tiếng Việt)</div><textarea class="form-textarea" id="uScript" placeholder="Script tiếng Việt..." style="min-height:100px"></textarea></div>
+      <div class="form-row"><div class="form-label">Tags (cách nhau bởi dấu phẩy)</div><input class="form-input" id="uTags" placeholder="VD: pain-hook, kitchen, italy"></div>
+      <div class="form-row"><div class="form-label">Thị trường</div>
+        <select class="form-input" id="uMarket">
+          <option value="">— Chọn thị trường —</option>
+          <option>ITALY</option><option>SPAIN</option><option>PORTUGAL</option>
+          <option>HUNGARY</option><option>POLAND</option><option>CZECH</option>
+          <option>SLOVAKIA</option><option>MEXICO</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeUpload()">Hủy</button>
+        <button class="btn btn-primary" onclick="submitUpload()">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CARD MODAL -->
+<div class="modal-overlay" id="editCardModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div style="flex:1"><div class="modal-title">✏️ Edit Creative</div></div>
+      <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeEditCard()">✕</button>
+    </div>
+    <div class="upload-form">
+      <div class="form-row"><div class="form-label">Tên Creative</div><input class="form-input" id="eTitle" placeholder="Tên creative"></div>
+      <div class="form-row"><div class="form-label">Link Video (Google Drive)</div><input class="form-input" id="eVideo" placeholder="https://drive.google.com/file/d/..."></div>
+      <div class="form-row"><div class="form-label">Ý tưởng / Angle</div><textarea class="form-textarea" id="eIdea" placeholder="Mô tả ý tưởng..."></textarea></div>
+      <div class="form-row"><div class="form-label">Script (Tiếng Việt)</div><textarea class="form-textarea" id="eScript" placeholder="Script tiếng Việt..." style="min-height:100px"></textarea></div>
+      <div class="form-row"><div class="form-label">Tags (cách nhau bởi dấu phẩy)</div><input class="form-input" id="eTags" placeholder="VD: pain-hook, italy"></div>
+      <div class="form-row" id="eMarketRow"><div class="form-label">Thị trường</div>
+        <select class="form-input" id="eMarket">
+          <option value="">— Chọn thị trường —</option>
+          <option>ITALY</option><option>SPAIN</option><option>PORTUGAL</option>
+          <option>HUNGARY</option><option>POLAND</option><option>CZECH</option>
+          <option>SLOVAKIA</option><option>MEXICO</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeEditCard()">Hủy</button>
+        <button class="btn btn-primary" onclick="submitEditCard()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <div style="flex:1"><div class="modal-title">⚙ Settings</div><div class="modal-meta">Quản lý thành viên</div></div>
+      <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-wrap">
+      <!-- My PIN — tất cả mọi người thấy -->
+      <div>
+        <div class="settings-section-title">🔑 Mã PIN của tôi</div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 16px;">
+          <div id="myPinDisplay" style="font-family:monospace;font-size:22px;font-weight:800;letter-spacing:.3em;color:var(--accent)"></div>
+          <div style="flex:1"></div>
+          <input type="password" maxlength="4" inputmode="numeric" placeholder="PIN mới" id="myPinInput"
+            style="background:var(--bg);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:monospace;font-size:16px;padding:7px 12px;width:100px;outline:none;letter-spacing:.2em;text-align:center">
+          <button class="btn btn-primary" style="font-size:12px;padding:7px 14px" onclick="saveMyPin()">Đổi PIN</button>
+        </div>
+      </div>
+      <div>
+        <div class="settings-section-title">Danh sách thành viên</div>
+        <div class="member-list" id="memberList"></div>
+      </div>
+      <div>
+        <div class="settings-section-title">Thêm thành viên mới</div>
+        <div class="add-member-form">
+          <input class="form-input" id="newMemberName" placeholder="Tên thành viên" style="flex:1;min-width:120px">
+          <select id="newMemberRole" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;border-radius:var(--r-sm);outline:none;cursor:pointer">
+            <option value="creator">Creator</option>
+            <option value="adser">Adser</option>
+          </select>
+          <button class="btn btn-primary" onclick="addMember()">Thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cb-tooltip"></div>
+
+<script>
+// ── CONSTANTS ──
+const LEADER = 'LONG';
+const DEFAULT_PIN = '0000';
+const API = 'https://script.google.com/macros/s/AKfycby7n39y1d_0OJGna95T8yN8rHe5BHy34Z5Rh1piW0iem84ctAT3Ovo-zfVxR-MlN20E/exec';
+const LARK_WEBHOOK = 'https://open.larksuite.com/open-apis/bot/v2/hook/89d7cd3d-dab2-4e0d-b2d2-c4923f0c59ce';
+let APP_URL = 'https://creatives-team3.nguyennhatphilong1120.workers.dev';
+
+const STATUS_CONFIG = {
+  pending:  {label:'Pending',  cls:'s-pending'},
+  picked:   {label:'Picked',   cls:'s-picked'},
+  oncamp:   {label:'On Camp',  cls:'s-oncamp'},
+  offcamp:  {label:'Off Camp', cls:'s-offcamp'},
+  rejected: {label:'Rejected', cls:'s-rejected'},
+};
+const ADSER_TABS = ['all','pending','picked','oncamp','offcamp','rejected','brief'];
+const ADSER_TAB_LABELS = {all:'All Video',pending:'Pending',picked:'Picked',oncamp:'On Camp',offcamp:'Off Camp',rejected:'Rejected',brief:'📋 From Brief'};
+
+// ── LOCAL CACHE ──
+let _members = null;
+let _creatives = null;
+
+// ── API ──
+async function apiFetch(params){
+  return new Promise((resolve,reject)=>{
+    const cbName='_cb_'+Date.now();
+    const url=API+'?'+new URLSearchParams({...params,callback:cbName});
+    const script=document.createElement('script');
+    window[cbName]=(data)=>{delete window[cbName];document.head.removeChild(script);resolve(data);};
+    script.onerror=()=>reject(new Error('API error'));
+    script.src=url;
+    document.head.appendChild(script);
+  });
+}
+async function apiPost(body){
+  return new Promise((resolve)=>{
+    const cbName='_cb_'+Date.now();
+    const params={action:body.action,payload:JSON.stringify(body.data),callback:cbName};
+    const script=document.createElement('script');
+    window[cbName]=(data)=>{delete window[cbName];document.head.removeChild(script);resolve(data);};
+    script.onerror=()=>resolve({success:true});
+    script.src=API+'?'+new URLSearchParams(params);
+    document.head.appendChild(script);
+  });
+}
+
+// ── MEMBERS ──
+async function loadMembers(){
+  try{const data=await apiFetch({action:'getMembers'});_members=Array.isArray(data)?data:getDefaultMembers();}
+  catch(e){_members=getDefaultMembers();}
+  localStorage.setItem('cb_members_cache',JSON.stringify(_members));
+  return _members;
+}
+function getMembers(){
+  if(_members) return _members;
+  try{return JSON.parse(localStorage.getItem('cb_members_cache'))||getDefaultMembers();}
+  catch{return getDefaultMembers();}
+}
+function getDefaultMembers(){
+  return [
+    {name:'LONG',  role:'adser',   isLeader:true,  pin:'1234'},
+    {name:'THANH', role:'adser',   isLeader:false, pin:'0000'},
+    {name:'NHI HA',role:'adser',   isLeader:false, pin:'0000'},
+    {name:'HUNG',  role:'adser',   isLeader:false, pin:'0000'},
+    {name:'NGHI',  role:'creator', isLeader:false, pin:'0000'},
+    {name:'DUYEN', role:'creator', isLeader:false, pin:'0000'},
+  ];
+}
+function getMemberByName(name){return getMembers().find(m=>m.name===name);}
+async function saveMembers(members){
+  _members=members;
+  localStorage.setItem('cb_members_cache',JSON.stringify(members));
+  await apiPost({action:'saveMembers',data:members});
+}
+
+// ── CREATIVES ──
+async function loadCreatives(){
+  showLoading(true);
+  try{const data=await apiFetch({action:'getCreatives'});_creatives=Array.isArray(data)?data:[];}
+  catch(e){_creatives=[];}
+  showLoading(false);
+  return _creatives;
+}
+function getData(){return _creatives||[];}
+async function saveNewCreative(creative){
+  _creatives=[creative,...getData()];
+  // Gửi fields cơ bản trước (tránh URL truncation)
+  const basic = {
+    id: creative.id,
+    title: creative.title,
+    creator: creative.creator,
+    videoUrl: creative.videoUrl,
+    market: creative.market || '',
+    sku: creative.sku || '',
+    status: creative.status || 'pending',
+    createdAt: creative.createdAt,
+    briefId: creative.briefId || '',
+    tags: creative.tags || [],
+    pickedBy: creative.pickedBy || [],
+    rejectVotes: creative.rejectVotes || [],
+    pitches: creative.pitches || [],
+    adserStatuses: creative.adserStatuses || {},
+    idea: (creative.idea||'').slice(0,200),
+    script: (creative.script||'').slice(0,300),
+  };
+  await apiPost({action:'saveCreative', data:basic});
+  // Nếu idea/script dài hơn → update ngay sau đó
+  if((creative.idea||'').length>200 || (creative.script||'').length>300){
+    basic.idea = creative.idea || '';
+    basic.script = creative.script || '';
+    await apiPost({action:'updateCreative', data:basic});
+  }
+}
+async function updateCreativeRemote(creative){
+  _creatives=getData().map(c=>c.id===creative.id?creative:c);
+  await apiPost({action:'updateCreative',data:creative});
+}
+
+// ── ADSER STATUS helpers ──
+// Each creative has adserStatuses: { "LONG": "picked", "THANH": "pending", ... }
+function getMyStatus(creative){
+  if(!currentUser) return 'pending';
+  const st=creative.adserStatuses||{};
+  return st[currentUser.name]||'pending';
+}
+function setMyStatus(creative, status){
+  if(!creative.adserStatuses) creative.adserStatuses={};
+  creative.adserStatuses[currentUser.name]=status;
+}
+function getAdserStatuses(creative){
+  const adsers=getMembers().filter(m=>m.role==='adser');
+  const st=creative.adserStatuses||{};
+  return adsers.map(a=>({name:a.name,status:st[a.name]||'pending'}));
+}
+
+// ── LOADING BAR ──
+function showLoading(show){
+  let el=document.getElementById('loadingBar');
+  if(!el){el=document.createElement('div');el.id='loadingBar';el.style.cssText='position:fixed;top:0;left:0;right:0;height:3px;background:var(--accent);z-index:9999;transition:opacity .4s;';document.body.appendChild(el);}
+  el.style.opacity=show?'1':'0';
+}
+
+// ── LARK ──
+async function larkSend(text){
+  const cbName='_lark_'+Date.now();
+  const url=API+'?'+new URLSearchParams({action:'notifyLark',payload:JSON.stringify({text}),callback:cbName});
+  return new Promise((resolve)=>{
+    const script=document.createElement('script');
+    window[cbName]=()=>{delete window[cbName];document.head.removeChild(script);resolve();};
+    script.onerror=()=>resolve();
+    script.src=url;
+    document.head.appendChild(script);
+  });
+}
+function getCardLink(creativeId){
+  return `${APP_URL}?card=${creativeId}`;
+}
+
+async function notifyLark(creative){
+  const sku=creative.sku||creative.title.split('-')[0].trim();
+  await larkSend(`🎬 Video mới từ "${creative.creator}"\n• Video: ${creative.title}\n• SKU: ${sku}\n• Link: ${getCardLink(creative.id)}`);
+}
+async function notifyLarkStatus(creative,newStatus){
+  const lbl=STATUS_CONFIG[newStatus]?.label||newStatus;
+  await larkSend(`🔄 Chuyển trạng thái\n• Video: ${creative.title}\n• Trạng thái: ${lbl}\n• Bởi: ${currentUser.name}\n• Link: ${getCardLink(creative.id)}`);
+}
+async function notifyLarkPitch(creative){
+  await larkSend(`💬 Pitch mới\n• Video: ${creative.title}\n• Từ: ${currentUser.name}\n• Link: ${getCardLink(creative.id)}`);
+}
+
+// ── HELPERS ──
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function fmtDate(ts){const d=new Date(ts);return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});}
+function driveEmbed(url){const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);return m?`https://drive.google.com/file/d/${m[1]}/preview`:url;}
+function getSKU(title){return (title||'').split('-')[0].trim().toUpperCase();}
+
+// ── SESSION ──
+let currentUser=null;
+let currentFilter='all';
+let currentCreative=null;
+const AVATAR_COLORS=['#c8f135','#5ba4ff','#b98cff','#4cde8a','#ff9f43','#ff5f5f','#ffd166','#22d3ee'];
+function avatarColor(name){let h=0;for(let c of name)h=(h*31+c.charCodeAt(0))%AVATAR_COLORS.length;return AVATAR_COLORS[h];}
+
+// ── LOGIN FLOW ──
+let pinBuffer='';
+let loginName='';
+
+function buildLoginSelect(){
+  const sel=document.getElementById('loginSelect');
+  const members=getMembers();
+  sel.innerHTML='<option value="">— Chọn tên —</option>';
+  members.forEach(m=>{
+    const opt=document.createElement('option');
+    opt.value=m.name;
+    opt.textContent=m.name+(m.isLeader?' 👑':'')+(m.role==='adser'?' (Adser)':' (Creator)');
+    sel.appendChild(opt);
+  });
+}
+function onNameSelect(){
+  const name=document.getElementById('loginSelect').value;
+  if(!name) return;
+  loginName=name;pinBuffer='';
+  document.getElementById('loginStep1').style.display='none';
+  document.getElementById('loginStep2').style.display='block';
+  document.getElementById('loginError').textContent='';
+  updatePinDots();
+}
+function backToName(){
+  loginName='';pinBuffer='';
+  document.getElementById('loginStep1').style.display='block';
+  document.getElementById('loginStep2').style.display='none';
+  document.getElementById('loginSelect').value='';
+  document.getElementById('loginError').textContent='';
+}
+function pinPress(digit){
+  if(pinBuffer.length>=4) return;
+  pinBuffer+=digit;
+  updatePinDots();
+  if(pinBuffer.length===4) setTimeout(checkPin,200);
+}
+function pinBack(){
+  if(pinBuffer.length===0) return;
+  pinBuffer=pinBuffer.slice(0,-1);
+  updatePinDots();
+}
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const dot=document.getElementById('pd'+i);
+    dot.textContent=i<pinBuffer.length?'●':'·';
+    dot.className='pin-dot'+(i<pinBuffer.length?' filled':'')+(i===pinBuffer.length?' active':'');
+  }
+}
+function checkPin(){
+  const member=getMemberByName(loginName);
+  if(!member) return;
+  if(pinBuffer===String(member.pin||DEFAULT_PIN)){
+    document.getElementById('loginError').textContent='';
+    currentUser=member;
+    localStorage.setItem('cb_session',JSON.stringify({name:member.name,ts:Date.now()}));
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('appScreen').style.display='block';
+    initApp().then(()=>{
+      const pendingCard=localStorage.getItem('cb_pending_card')||new URLSearchParams(window.location.search).get('card');
+      if(pendingCard){
+        localStorage.removeItem('cb_pending_card');
+        const c=getData().find(x=>x.id===pendingCard);
+        if(c) openDetail(pendingCard);
+      }
+    });
+  } else {
+    document.getElementById('loginError').textContent='Mã PIN không đúng. Thử lại.';
+    pinBuffer='';updatePinDots();
+    const box=document.querySelector('.login-box');
+    box.style.animation='shake .3s';setTimeout(()=>box.style.animation='',400);
+  }
+}
+document.addEventListener('keydown',function(e){
+  if(document.getElementById('loginStep2').style.display==='none') return;
+  if(e.key>='0'&&e.key<='9') pinPress(e.key);
+  if(e.key==='Backspace') pinBack();
+});
+function doLogout(){
+  currentUser=null;currentFilter='all';currentCreative=null;pinBuffer='';loginName='';
+  localStorage.removeItem('cb_session');
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginStep1').style.display='block';
+  document.getElementById('loginStep2').style.display='none';
+  buildLoginSelect();
+}
+
+// ── TABS ──
+function buildTabs(){
+  const tabs=document.getElementById('filterTabs');
+  if(currentUser.role==='creator'&&!currentUser.isLeader){
+    // Creator: chỉ All Video
+    tabs.innerHTML=`<button class="filter-tab active" onclick="setFilter('all')">All Video <span class="tab-count" id="cnt-all">0</span></button>`;
+    currentFilter='all';
+  } else {
+    // Adser + LONG: đủ tabs
+    tabs.innerHTML=ADSER_TABS.map((f,i)=>
+      `<button class="filter-tab${i===0?' active':''}" onclick="setFilter('${f}')">${ADSER_TAB_LABELS[f]} <span class="tab-count" id="cnt-${f}">0</span></button>`
+    ).join('');
+    currentFilter='all';
+  }
+}
+
+function setFilter(f){
+  currentFilter=f;
+  document.querySelectorAll('.filter-tab').forEach(t=>{
+    const match=t.getAttribute('onclick')&&t.getAttribute('onclick').includes(`'${f}'`);
+    t.classList.toggle('active',match);
+  });
+  renderCards();
+}
+
+// ── VISIBLE CARDS ──
+function getVisibleCards(){
+  const all=getData();
+
+  // Creator: chỉ thấy card của mình
+  if(currentUser.role==='creator' && !currentUser.isLeader){
+    return all.filter(c=>c.creator===currentUser.name)
+              .sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
+  }
+
+  // LONG: thấy tất cả, filter theo tab
+  if(currentUser.isLeader){
+    let visible=all;
+    if(currentFilter==='brief') visible=all.filter(c=>!!c.briefId);
+    else if(currentFilter!=='all') visible=all.filter(c=>(c.status||'pending')===currentFilter);
+    return visible.sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
+  }
+
+  // Adser: filter by their own status, ẩn card bị set 'hidden'
+  const visible=all.filter(c=>getStatusForAdser(c,currentUser.name)!=='hidden');
+  if(currentFilter==='all') return visible;
+  if(currentFilter==='brief') return visible.filter(c=>!!c.briefId);
+  return visible.filter(c=>getStatusForAdser(c,currentUser.name)===currentFilter);
+}
+
+function getStatusForAdser(creative,adserName){
+  const st=creative.adserStatuses||{};
+  return st[adserName]||'pending';
+}
+
+// ── STATS ──
+function renderStats(){
+  const all=getData();
+  if(currentUser.isLeader){
+    // LONG: dùng global status
+    ADSER_TABS.forEach(f=>{
+      const el=document.getElementById('cnt-'+f);
+      if(!el) return;
+      if(f==='all'){el.textContent=all.length;return;}
+      if(f==='brief'){el.textContent=all.filter(c=>!!c.briefId).length;return;}
+      el.textContent=all.filter(c=>(c.status||'pending')===f).length;
+    });
+  } else if(currentUser.role==='adser'){
+    const visible=all.filter(c=>getStatusForAdser(c,currentUser.name)!=='hidden');
+    ADSER_TABS.forEach(f=>{
+      const el=document.getElementById('cnt-'+f);
+      if(!el) return;
+      if(f==='all'){el.textContent=visible.length;return;}
+      if(f==='brief'){el.textContent=visible.filter(c=>!!c.briefId).length;return;}
+      el.textContent=visible.filter(c=>getStatusForAdser(c,currentUser.name)===f).length;
+    });
+  } else {
+    const el=document.getElementById('cnt-all');
+    if(el) el.textContent=all.filter(c=>c.creator===currentUser.name).length;
+  }
+  const c={pending:0,picked:0,oncamp:0,offcamp:0,rejected:0};
+  all.forEach(x=>{if(c[x.status]!==undefined)c[x.status]++;});
+  document.getElementById('topbarStats').innerHTML=`
+    <div class="stat-item"><div class="stat-dot" style="background:var(--yellow)"></div><span class="stat-num">${c.pending}</span> Pending</div>
+    <div class="stat-item"><div class="stat-dot" style="background:var(--green)"></div><span class="stat-num">${c.picked}</span> Picked</div>
+    <div class="stat-item"><div class="stat-dot" style="background:var(--blue)"></div><span class="stat-num">${c.oncamp}</span> On Camp</div>`;
+}
+
+// ── RENDER CARDS ──
+function renderCards(){
+  const visible=getVisibleCards();
+  const grid=document.getElementById('cardsGrid');
+  const isLeaderOrCreator=currentUser.isLeader||currentUser.role==='creator';
+
+  if(!visible.length){
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><div>Chưa có creative nào ở đây.</div></div>`;
+    return;
+  }
+
+  // Group by SKU for LONG and Creator
+  if(isLeaderOrCreator){
+    let html='';
+    let lastSKU='';
+    visible.forEach(c=>{
+      const sku=getSKU(c.title);
+      if(sku!==lastSKU){
+        if(lastSKU!=='') html+=`</div>`;
+        html+=`<div style="grid-column:1/-1;margin:${lastSKU?'16px':0} 0 6px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${sku}</span></div><div style="display:contents">`;
+        lastSKU=sku;
+      }
+      html+=renderCard(c,isLeaderOrCreator);
+    });
+    if(lastSKU!='') html+=`</div>`;
+    grid.innerHTML=html;
+  } else {
+    grid.innerHTML=visible.map(c=>renderCard(c,false)).join('');
+  }
+}
+
+function renderCard(c,showAdserStatuses){
+  const myStatus=currentUser.role==='adser'?getStatusForAdser(c,currentUser.name):(c.status||'pending');
+  const st=STATUS_CONFIG[myStatus]||STATUS_CONFIG.pending;
+  const tags=(c.tags||[]).slice(0,3).map(t=>`<span class="card-tag">${t}</span>`).join('');
+  const pitchCount=(c.pitches||[]).length;
+  const isFromBrief=!!c.briefId;
+
+  let adserBadges='';
+  if(showAdserStatuses){
+    const statuses=getAdserStatuses(c);
+    adserBadges=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">${
+      statuses.map(s=>{
+        const sc=STATUS_CONFIG[s.status]||STATUS_CONFIG.pending;
+        return `<span style="font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px" class="${sc.cls}">${s.name}: ${sc.label}</span>`;
+      }).join('')
+    }</div>`;
+  }
+
+  return `
+  <div class="creative-card status-${myStatus}${isFromBrief?' from-brief':''}" onclick="openDetail('${c.id}')">
+    <div class="card-thumb">
+      <div class="card-thumb-label">▶ ${c.title}</div>
+      <div class="card-status-badge ${st.cls}">${st.label}</div>
+      ${isFromBrief?`<div class="card-brief-badge">📋 From Brief</div>`:''}
+    </div>
+    <div class="card-body">
+      <div class="card-title">${c.title}</div>
+      <div class="card-creator">by ${c.creator}</div>
+      <div class="card-idea">${c.idea||'—'}</div>
+      ${tags?`<div class="card-tags">${tags}</div>`:''}
+      ${adserBadges}
+      <div class="card-footer">
+        <span class="card-date">${fmtDate(c.createdAt)}</span>
+        ${c.market?`<span style="font-size:10px;font-weight:800;padding:1px 6px;border-radius:3px;background:var(--blue-dim);color:var(--blue)">${c.market}</span>`:''}
+        ${c.postId&&['oncamp','offcamp'].includes(c.status)?`<span style="font-size:10px;font-family:monospace;color:var(--accent)">ID: ${c.postId}${c.postIdLocked?' 🔒':''}</span>`:''}
+        ${pitchCount?`<span style="font-size:11px;color:var(--text2)">💬 ${pitchCount}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── DETAIL MODAL ──
+function openDetail(id){
+  const data=getData();
+  const c=data.find(x=>x.id===id);
+  if(!c) return;
+  currentCreative=id;
+
+  document.getElementById('dTitle').textContent=c.title;
+  document.getElementById('dCreator').textContent='👤 '+c.creator;
+  document.getElementById('dDate').textContent='📅 '+fmtDate(c.createdAt);
+
+  // Video
+  const vw=document.getElementById('dVideoWrap');
+  const dl=document.getElementById('dDriveLink');
+  const dlBtn=document.getElementById('dDriveLinkBtn');
+  if(c.videoUrl){
+    dl.style.display='block';dlBtn.href=c.videoUrl;
+    vw.innerHTML=`<iframe src="${driveEmbed(c.videoUrl)}" allowfullscreen allow="autoplay"></iframe>`;
+  } else {
+    dl.style.display='none';
+    vw.innerHTML=`<div class="no-video">Không có video</div>`;
+  }
+
+  document.getElementById('dIdea').textContent=c.idea||'—';
+  document.getElementById('dScript').textContent=c.script||'—';
+  document.getElementById('dTags').innerHTML=(c.tags||[]).map(t=>`<span class="card-tag">${t}</span>`).join('');
+
+  // Market badge
+  const marketEl=document.getElementById('dMarketBadge');
+  if(marketEl){
+    if(c.market){marketEl.textContent=c.market;marketEl.style.display='inline-flex';}
+    else marketEl.style.display='none';
+  }
+
+  // Post ID — show only oncamp/offcamp
+  const postIdWrap=document.getElementById('postIdWrap');
+  const isOnOffCamp=['oncamp','offcamp'].includes(c.status);
+  postIdWrap.style.display=isOnOffCamp?'block':'none';
+  if(isOnOffCamp){
+    const locked=c.postIdLocked||false;
+    document.getElementById('postIdInput').value=c.postId||'';
+    document.getElementById('postIdInput').disabled=locked;
+    document.getElementById('postIdLockBtn').textContent=locked?'🔒':'✓';
+    const lockedView=document.getElementById('postIdLockedView');
+    const inputRow=document.getElementById('postIdInput').parentElement;
+    if(locked){
+      lockedView.style.display='flex';
+      inputRow.style.display='none';
+      document.getElementById('postIdLockedText').textContent=c.postId||'—';
+    } else {
+      lockedView.style.display='none';
+      inputRow.style.display='flex';
+    }
+  }
+
+  // Status flow — cho adser thấy trạng thái của mình
+  const isLeaderOrCreator=currentUser.isLeader||currentUser.role==='creator';
+  const myStatus=isLeaderOrCreator?'':getStatusForAdser(c,currentUser.name);
+  const steps=['pending','picked','oncamp','offcamp'];
+  const labels={pending:'Pending',picked:'Picked',oncamp:'On Camp',offcamp:'Off Camp'};
+  document.getElementById('statusFlow').innerHTML=steps.map(s=>{
+    const active=s===myStatus?` s-${s}-flow`:'';
+    return `<div class="flow-step${active}">${labels[s]}</div>`;
+  }).join('');
+
+  // Picked by (legacy)
+  const pickers=Array.isArray(c.pickedBy)?c.pickedBy:(c.pickedBy?[c.pickedBy]:[]);
+  document.getElementById('pickedByWrap').style.display='none';
+
+  // Per-adser statuses — LONG and Creator
+  const asWrap=document.getElementById('adserStatusesWrap');
+  const asList=document.getElementById('adserStatusesList');
+  if(isLeaderOrCreator){
+    asWrap.style.display='block';
+    const statuses=getAdserStatuses(c);
+    asList.innerHTML=statuses.map(s=>{
+      const sc=STATUS_CONFIG[s.status]||STATUS_CONFIG.pending;
+      const col=avatarColor(s.name);
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface2);border-radius:var(--r-sm)">
+        <div style="width:22px;height:22px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#000">${s.name[0]}</div>
+        <div style="flex:1;font-size:12px;font-weight:600">${s.name}</div>
+        <span class="card-status-badge ${sc.cls}" style="position:static;font-size:10px">${sc.label}</span>
+      </div>`;
+    }).join('');
+  } else {
+    asWrap.style.display='none';
+  }
+
+  // Adser actions
+  const actEl=document.getElementById('adserActions');
+  actEl.style.display=(currentUser.role==='adser'||currentUser.isLeader)?'block':'none';
+  if(currentUser.role==='adser'||currentUser.isLeader){
+    const ms=getStatusForAdser(c,currentUser.name);
+    document.getElementById('btnPick').classList.toggle('active',ms==='picked');
+    document.getElementById('btnOncamp').classList.toggle('active',ms==='oncamp');
+    document.getElementById('btnOffcamp').classList.toggle('active',ms==='offcamp');
+  }
+  document.getElementById('rejectPanel').classList.remove('show');
+  document.getElementById('rejectReasonInput').value='';
+
+  // Reject votes
+  const votes=c.rejectVotes||[];
+  const rvw=document.getElementById('rejectVotesWrap');
+  document.getElementById('rejectVoteCount').textContent=votes.length;
+  if(votes.length>0){
+    rvw.style.display='block';
+    document.getElementById('rejectVotes').innerHTML=votes.map(v=>`
+      <div class="reject-vote-item">
+        <div class="reject-vote-name">${v.adser}</div>
+        <div class="reject-vote-reason">${v.reason}</div>
+      </div>`).join('');
+  } else {rvw.style.display='none';}
+
+  // Edit / Delete buttons
+  const canEdit=getStatusForAdser(c,currentUser.name)==='pending'&&
+    (currentUser.isLeader||currentUser.name===c.creator);
+  document.getElementById('btnEditCard').style.display=canEdit?'flex':'none';
+  const canDelete=currentUser.isLeader&&['pending','rejected'].includes(c.status);
+  document.getElementById('btnDeleteCard').style.display=canDelete?'flex':'none';
+
+  renderPitches(c.pitches||[]);
+  document.getElementById('detailModal').classList.add('open');
+}
+function closeDetail(){document.getElementById('detailModal').classList.remove('open');currentCreative=null;}
+
+// ── ACTIONS (per-adser) ──
+async function togglePick(){
+  if(!currentCreative||!currentUser) return;
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  const cur=getStatusForAdser(c,currentUser.name);
+  const newStatus=cur==='picked'?'pending':'picked';
+  setMyStatus(c,newStatus);
+  // Update global status based on any adser being oncamp/picked
+  updateGlobalStatus(c);
+  await updateCreativeRemote(c);
+  await notifyLarkStatus(c,newStatus);
+  renderCards();renderStats();openDetail(currentCreative);
+}
+
+async function doAction(status){
+  if(!currentCreative) return;
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  setMyStatus(c,status);
+  updateGlobalStatus(c);
+  await updateCreativeRemote(c);
+  await notifyLarkStatus(c,status);
+  renderCards();renderStats();openDetail(currentCreative);
+}
+
+function updateGlobalStatus(c){
+  const adsers=getMembers().filter(m=>m.role==='adser').map(m=>m.name);
+  const st=c.adserStatuses||{};
+  // Bỏ qua 'hidden' — chỉ tính adser thật sự có quyền xem card này
+  const statuses=adsers.map(a=>st[a]||'pending').filter(s=>s!=='hidden');
+  if(statuses.some(s=>s==='oncamp')) c.status='oncamp';
+  else if(statuses.some(s=>s==='picked')) c.status='picked';
+  else if(statuses.some(s=>s==='offcamp')) c.status='offcamp';
+  else c.status='pending';
+}
+
+function autoSwitchTab(status){
+  currentFilter=status;
+  document.querySelectorAll('.filter-tab').forEach(t=>{
+    t.classList.toggle('active',t.getAttribute('onclick')?.includes(`'${status}'`));
+  });
+}
+
+function toggleRejectPanel(){document.getElementById('rejectPanel').classList.toggle('show');}
+
+async function submitReject(){
+  const reason=document.getElementById('rejectReasonInput').value.trim();
+  if(!reason){alert('Nhập lý do reject.');return;}
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  if(!c.rejectVotes) c.rejectVotes=[];
+  const name=currentUser.name;
+  const ex=c.rejectVotes.findIndex(v=>v.adser===name);
+  if(ex>=0) c.rejectVotes[ex].reason=reason;
+  else c.rejectVotes.push({adser:name,reason,ts:Date.now()});
+  setMyStatus(c,'rejected');
+  updateGlobalStatus(c);
+  await updateCreativeRemote(c);
+  await notifyLarkStatus(c,'rejected');
+  currentFilter='rejected';
+  document.querySelectorAll('.filter-tab').forEach(t=>{
+    t.classList.toggle('active',t.getAttribute('onclick')?.includes("'rejected'"));
+  });
+  renderCards();renderStats();closeDetail();
+}
+
+// ── PITCH ──
+function pFmt(cmd){document.execCommand(cmd,false,null);document.getElementById('pitchEditor').focus();}
+function pColor(col){document.execCommand('foreColor',false,col);document.getElementById('pitchEditor').focus();}
+
+async function sendPitch(){
+  const editor=document.getElementById('pitchEditor');
+  const html=editor.innerHTML.trim();
+  const text=editor.innerText.trim();
+  if(!text||!currentCreative) return;
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  if(!c.pitches) c.pitches=[];
+  c.pitches.push({role:currentUser.role,sender:currentUser.name,html,ts:Date.now()});
+  await updateCreativeRemote(c);
+  await notifyLarkPitch(c);
+  editor.innerHTML='';
+  renderPitches(c.pitches);
+}
+
+function renderPitches(pitches){
+  const thread=document.getElementById('pitchThread');
+  document.getElementById('pitchCount').textContent=pitches.length?`(${pitches.length})`:'';
+  if(!pitches.length){
+    thread.innerHTML=`<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">Chưa có tin nhắn nào.</div>`;
+    return;
+  }
+  thread.innerHTML=pitches.map(p=>`
+    <div class="pitch-msg ${p.role}">
+      <div class="pitch-msg-header">
+        <span class="pitch-sender ${p.role}">${p.role==='creator'?'🎨':'📊'} ${p.sender}</span>
+        <span class="pitch-time">${fmtDate(p.ts)}</span>
+      </div>
+      <div class="pitch-text">${p.html||p.text||''}</div>
+    </div>`).join('');
+  thread.scrollTop=thread.scrollHeight;
+}
+
+// ── UPLOAD ──
+function openUpload(){document.getElementById('uploadModal').classList.add('open');}
+function closeUpload(){document.getElementById('uploadModal').classList.remove('open');}
+async function submitUpload(){
+  const title=document.getElementById('uTitle').value.trim();
+  if(!title){alert('Nhập tên creative.');return;}
+  const tags=document.getElementById('uTags').value.trim().split(',').map(t=>t.trim()).filter(Boolean);
+  const sku=getSKU(title);
+  const creative={
+    id:genId(),creator:currentUser.name,title,sku,
+    videoUrl:document.getElementById('uVideo').value.trim(),
+    idea:document.getElementById('uIdea').value.trim(),
+    script:document.getElementById('uScript').value.trim(),
+    tags,market:document.getElementById('uMarket').value,status:'pending',adserStatuses:{},createdAt:Date.now(),pitches:[],rejectVotes:[],pickedBy:[],postId:'',postIdLocked:false
+  };
+  showLoading(true);
+  await saveNewCreative(creative);
+  await notifyLark(creative);
+  showLoading(false);
+  ['uTitle','uVideo','uIdea','uScript','uTags'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('uMarket').value='';
+  closeUpload();
+  renderCards();renderStats();
+}
+
+// ── SETTINGS ──
+function openSettings(){
+  const myPin=currentUser.pin||'0000';
+  document.getElementById('myPinDisplay').textContent=myPin;
+  document.getElementById('myPinInput').value='';
+  renderMemberList();
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings(){document.getElementById('settingsModal').classList.remove('open');}
+
+async function saveMyPin(){
+  const val=document.getElementById('myPinInput').value.trim();
+  if(!/^\d{4}$/.test(val)){alert('PIN phải là 4 chữ số.');return;}
+  const members=getMembers();
+  const idx=members.findIndex(m=>m.name===currentUser.name);
+  if(idx<0) return;
+  members[idx].pin=val;currentUser.pin=val;
+  await saveMembers(members);
+  document.getElementById('myPinDisplay').textContent=val;
+  document.getElementById('myPinInput').value='';
+  alert('Đã đổi PIN thành công!');
+}
+
+function renderMemberList(){
+  const members=getMembers();
+  const isLeader=currentUser.isLeader;
+  document.getElementById('memberList').innerHTML=members.map((m,i)=>{
+    const col=avatarColor(m.name);
+    const roleLabel=m.isLeader?'Leader':m.role==='adser'?'Adser':'Creator';
+    const roleCls=m.isLeader?'role-leader':m.role==='adser'?'role-adser':'role-creator';
+    return `
+    <div>
+      <div class="member-row">
+        <div class="member-avatar" style="background:${col}">${m.name[0]}</div>
+        <div class="member-name">${m.name}</div>
+        <span class="member-role-badge ${roleCls}">${roleLabel}</span>
+        ${isLeader?`<span style="font-family:monospace;font-size:13px;font-weight:700;color:var(--text3);letter-spacing:.15em;background:var(--surface3);padding:2px 8px;border-radius:4px">${m.pin||'0000'}</span>`:''}
+        <div class="member-actions">
+          ${isLeader&&!m.isLeader?`
+            <button class="btn-pin-change" onclick="togglePinChange(${i})">🔑</button>
+            <select class="member-select" onchange="changeMemberRole(${i},this.value)">
+              <option value="creator" ${m.role==='creator'?'selected':''}>Creator</option>
+              <option value="adser" ${m.role==='adser'?'selected':''}>Adser</option>
+            </select>
+            <button class="btn-remove" onclick="removeMember(${i})">✕</button>`
+          :isLeader&&m.isLeader?`<span style="font-size:11px;color:var(--text3)">Leader</span>`:''}
+        </div>
+      </div>
+      ${isLeader&&!m.isLeader?`
+      <div class="pin-change-row" id="pcr-${i}">
+        <span style="font-size:11px;color:var(--text3)">PIN mới:</span>
+        <input type="password" maxlength="4" inputmode="numeric" placeholder="••••" id="pci-${i}">
+        <button class="btn btn-primary" style="font-size:11px;padding:5px 12px" onclick="savePinChange(${i})">Lưu</button>
+        <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="togglePinChange(${i})">Hủy</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+async function savePinChange(idx){
+  const val=document.getElementById('pci-'+idx).value.trim();
+  if(!/^\d{4}$/.test(val)){alert('PIN phải là 4 chữ số.');return;}
+  const members=getMembers();members[idx].pin=val;
+  await saveMembers(members);togglePinChange(idx);renderMemberList();
+}
+
+function togglePinChange(idx){
+  const row=document.getElementById('pcr-'+idx);
+  row.style.display=row.style.display==='flex'?'none':'flex';
+  if(row.style.display==='flex') document.getElementById('pci-'+idx).focus();
+}
+
+async function changeMemberRole(idx,role){
+  const members=getMembers();members[idx].role=role;
+  await saveMembers(members);renderMemberList();
+}
+
+async function removeMember(idx){
+  const members=getMembers();
+  if(members[idx].isLeader) return;
+  members.splice(idx,1);
+  await saveMembers(members);renderMemberList();
+}
+
+async function addMember(){
+  const name=document.getElementById('newMemberName').value.trim();
+  const role=document.getElementById('newMemberRole').value;
+  if(!name){alert('Nhập tên thành viên.');return;}
+  const members=getMembers();
+  if(members.find(m=>m.name.toLowerCase()===name.toLowerCase())){alert('Tên đã tồn tại.');return;}
+  members.push({name:name.toUpperCase(),role,isLeader:false,pin:'0000'});
+  await saveMembers(members);
+  document.getElementById('newMemberName').value='';
+  renderMemberList();buildLoginSelect();
+}
+
+// ── DELETE CARD ──
+async function deleteCard(){
+  if(!currentCreative||!currentUser.isLeader) return;
+  if(!confirm('Xóa creative này? Không thể hoàn tác.')) return;
+  const cbName='_cb_'+Date.now();
+  const url=API+'?'+new URLSearchParams({action:'deleteCreative',payload:JSON.stringify({id:currentCreative}),callback:cbName});
+  showLoading(true);
+  await new Promise((resolve)=>{
+    const script=document.createElement('script');
+    window[cbName]=()=>{delete window[cbName];document.head.removeChild(script);resolve();};
+    script.onerror=()=>resolve();
+    script.src=url;
+    document.head.appendChild(script);
+  });
+  _creatives=getData().filter(c=>c.id!==currentCreative);
+  showLoading(false);
+  closeDetail();renderCards();renderStats();
+}
+
+// ── POST ID ──
+async function togglePostIdLock(){
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  const val=document.getElementById('postIdInput').value.trim();
+  if(!val){alert('Nhập Post ID trước khi khóa.');return;}
+  c.postId=val;
+  c.postIdLocked=true;
+  await updateCreativeRemote(c);
+  openDetail(currentCreative);
+}
+async function unlockPostId(){
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  c.postIdLocked=false;
+  await updateCreativeRemote(c);
+  openDetail(currentCreative);
+}
+
+// ── EDIT CARD ──
+function openEditCard(){
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  document.getElementById('eTitle').value=c.title||'';
+  document.getElementById('eVideo').value=c.videoUrl||'';
+  document.getElementById('eIdea').value=c.idea||'';
+  document.getElementById('eScript').value=c.script||'';
+  document.getElementById('eTags').value=(c.tags||[]).join(', ');
+  // Market — only for leader/creator
+  const eMarketRow=document.getElementById('eMarketRow');
+  const canEditMarket=currentUser.isLeader||currentUser.role==='creator';
+  eMarketRow.style.display=canEditMarket?'flex':'none';
+  if(canEditMarket) document.getElementById('eMarket').value=c.market||'';
+  document.getElementById('editCardModal').classList.add('open');
+}
+function closeEditCard(){document.getElementById('editCardModal').classList.remove('open');}
+async function submitEditCard(){
+  const data=getData();
+  const c=data.find(x=>x.id===currentCreative);
+  if(!c) return;
+  c.title=document.getElementById('eTitle').value.trim();
+  c.videoUrl=document.getElementById('eVideo').value.trim();
+  c.idea=document.getElementById('eIdea').value.trim();
+  c.script=document.getElementById('eScript').value.trim();
+  c.tags=document.getElementById('eTags').value.trim().split(',').map(t=>t.trim()).filter(Boolean);
+  c.sku=getSKU(c.title);
+  const canEditMarket=currentUser.isLeader||currentUser.role==='creator';
+  if(canEditMarket) c.market=document.getElementById('eMarket').value;
+  showLoading(true);
+  await updateCreativeRemote(c);
+  showLoading(false);
+  closeEditCard();openDetail(currentCreative);renderCards();
+}
+
+// ── CLOSE OVERLAYS ──
+document.addEventListener('DOMContentLoaded',function(){
+  ['detailModal','uploadModal','settingsModal','editCardModal'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('click',function(e){
+      if(e.target===this){
+        if(id==='detailModal') closeDetail();
+        else if(id==='uploadModal') closeUpload();
+        else if(id==='editCardModal') closeEditCard();
+        else closeSettings();
+      }
+    });
+  });
+});
+
+// ── INIT APP ──
+async function initApp(){
+  const col=avatarColor(currentUser.name);
+  const roleLabel=currentUser.isLeader?'Leader':currentUser.role==='adser'?'Adser':'Creator';
+  document.getElementById('userBadge').innerHTML=`
+    <div class="user-avatar" style="background:${col}">${currentUser.name[0]}</div>
+    <div><div class="user-name">${currentUser.name}</div><div class="user-role">${roleLabel}</div></div>`;
+  document.getElementById('uploadBtn').style.display=currentUser.role==='creator'?'flex':'none';
+  document.getElementById('btnSettings').style.display=currentUser.isLeader?'flex':'none';
+  document.getElementById('toolbarSub').textContent=
+    currentUser.isLeader?'Xem tất cả — sort theo SKU':
+    currentUser.role==='creator'?'Video của bạn — sort theo SKU':'';
+
+  // Build page nav theo role
+  // Adser/LONG: Creative Library + Content Brief
+  // Creator: Creative Library + Plan
+  // LONG (leader): cả 3
+  const nav = document.getElementById('pageNav');
+  const isLeader = currentUser.isLeader;
+  const isAdser = currentUser.role === 'adser';
+  const isCreator = currentUser.role === 'creator';
+  let navHTML = `<button class="page-nav-btn active" onclick="switchPage('creatives')">🎬 Creative Library</button>`;
+  if (isLeader || isAdser) navHTML += `<button class="page-nav-btn" onclick="switchPage('brief')">📋 Content Brief</button>`;
+  if (isLeader || isCreator) navHTML += `<button class="page-nav-btn" onclick="switchPage('plan')">✅ Plan</button>`;
+  nav.innerHTML = navHTML;
+
+  buildTabs();
+  await loadCreatives();
+  await loadBriefs();
+  renderCards();renderStats();
+  setInterval(async()=>{await loadCreatives();renderCards();renderStats();},30000);
+}
+
+// ── TOOLTIP ──
+(function(){
+  const tip = document.getElementById('cb-tooltip');
+  document.addEventListener('mouseover', e=>{
+    const el = e.target.closest('[data-tip]');
+    if(!el||!tip) return;
+    tip.textContent = el.getAttribute('data-tip');
+    tip.style.display = 'block';
+  });
+  document.addEventListener('mousemove', e=>{
+    if(tip.style.display==='none') return;
+    const x = e.clientX, y = e.clientY;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    tip.style.left = Math.min(x - tw/2, window.innerWidth - tw - 8) + 'px';
+    tip.style.top = Math.max(y - th - 12, 8) + 'px';
+  });
+  document.addEventListener('mouseout', e=>{
+    if(!e.target.closest('[data-tip]')) return;
+    tip.style.display = 'none';
+  });
+})();
+
+
+// ══════════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════════
+let currentPage = 'creatives';
+function switchPage(page) {
+  currentPage = page;
+  ['creatives','brief','plan'].forEach(p => {
+    const el = document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1));
+    if (el) el.style.display = p === page ? '' : 'none';
+  });
+  document.querySelectorAll('.page-nav-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick').includes("'" + page + "'"));
+  });
+  if (page === 'brief') {
+    // Chỉ Adser/LONG tạo brief
+    const canCreate = currentUser.role === 'adser' || currentUser.isLeader;
+    document.getElementById('btnAddBrief').style.display = canCreate ? 'flex' : 'none';
+    document.getElementById('briefSub').textContent = canCreate
+      ? 'Brief do bạn tạo cho Creators'
+      : 'Brief từ Adsers — nhận và hoàn thành';
+    loadBriefs().then(renderBriefs);
+  }
+  if (page === 'plan') { loadBriefs().then(renderPlan); }
+}
+
+// ══════════════════════════════════════════
+// BRIEF DATA
+// ══════════════════════════════════════════
+let _briefs = null;
+let currentBriefFilter = 'all';
+let currentBriefId = null;
+let planFilter = 'all';
+
+async function loadBriefs() {
+  try {
+    const data = await apiFetch({action:'getBriefs'});
+    _briefs = Array.isArray(data) ? data : [];
+  } catch(e) {
+    _briefs = _briefs || [];
+  }
+  return _briefs;
+}
+function getBriefs() { return _briefs || []; }
+async function saveBrief(brief) {
+  _briefs = [brief, ...getBriefs()];
+  await apiPost({action:'saveBrief', data:brief});
+}
+async function updateBriefRemote(brief) {
+  _briefs = getBriefs().map(b => b.id === brief.id ? brief : b);
+  await apiPost({action:'updateBrief', data:brief});
+}
+
+// ══════════════════════════════════════════
+// BRIEF RENDER
+// ══════════════════════════════════════════
+function setBriefFilter(f) {
+  currentBriefFilter = f;
+  ['all','open','done'].forEach(x => {
+    document.getElementById('bf' + x.charAt(0).toUpperCase() + x.slice(1))?.classList.toggle('active', x === f);
+  });
+  renderBriefs();
+}
+
+function getFilteredBriefs() {
+  const all = getBriefs();
+  if (currentBriefFilter === 'open') return all.filter(b => b.status !== 'done');
+  if (currentBriefFilter === 'done') return all.filter(b => b.status === 'done');
+  return all;
+}
+
+function renderBriefs() {
+  const briefs = getFilteredBriefs();
+  const all = getBriefs();
+  document.getElementById('bfCntAll').textContent = all.length;
+  document.getElementById('bfCntOpen').textContent = all.filter(b => b.status !== 'done').length;
+  document.getElementById('bfCntDone').textContent = all.filter(b => b.status === 'done').length;
+
+  const grid = document.getElementById('briefGrid');
+  if (!briefs.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div>Chưa có brief nào.</div></div>`;
+    return;
+  }
+  grid.innerHTML = briefs.map(b => {
+    const kws = (b.keywords||'').split(',').filter(Boolean).slice(0,4);
+    const claimers = b.claimers || [];
+    const isDone = b.status === 'done';
+    const statusCls = isDone ? 'bs-done' : claimers.length ? 'bs-claimed' : 'bs-open';
+    const statusLabel = isDone ? '✅ Hoàn thành' : claimers.length ? `🔧 ${claimers.join(', ')}` : '⏳ Cần làm';
+    return `
+    <div class="brief-card ${isDone?'bc-done':'bc-open'}" onclick="openBriefDetail('${b.id}')">
+      <div class="brief-header">
+        <span class="brief-sku-badge">${b.sku||'—'}</span>
+        <span class="brief-title">${b.title}</span>
+        ${b.market ? `<span class="brief-market">${b.market}</span>` : ''}
+      </div>
+      <div class="brief-meta">
+        <span>👤 ${b.createdBy}</span>
+        <span>📅 ${fmtDate(b.createdAt)}</span>
+      </div>
+      <div class="brief-outline">${b.outline||'—'}</div>
+      ${kws.length ? `<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">${kws.map(k=>`<span class="brief-keyword">${k.trim()}</span>`).join('')}</div>` : ''}
+      <div class="brief-footer">
+        <span class="brief-status-badge ${statusCls}">${statusLabel}</span>
+        ${claimers.length && !isDone ? `<div class="brief-claimers">${claimers.map(c=>`<span class="brief-claimer-tag">${c}</span>`).join('')}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// BRIEF FORM (TẠO MỚI)
+// ══════════════════════════════════════════
+function openBriefForm() {
+  ['bSku','bTitle','bOutline','bApproach','bKeywords'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('bMarket').value = '';
+  document.getElementById('briefFormModal').classList.add('open');
+}
+function closeBriefForm() { document.getElementById('briefFormModal').classList.remove('open'); }
+
+async function submitBriefForm() {
+  const sku = document.getElementById('bSku').value.trim().toUpperCase();
+  const title = document.getElementById('bTitle').value.trim();
+  const market = document.getElementById('bMarket').value;
+  const outline = document.getElementById('bOutline').value.trim();
+  const approach = document.getElementById('bApproach').value.trim();
+  const keywords = document.getElementById('bKeywords').value.trim();
+  if (!sku || !title) { alert('Cần điền SKU và Tên brief.'); return; }
+  const brief = {
+    id: genId(), sku, title, market, outline, approach, keywords,
+    createdBy: currentUser.name, createdAt: Date.now(),
+    status: 'open', claimers: [], completions: {}
+  };
+  showLoading(true);
+  await saveBrief(brief);
+  await larkSend(`📋 Brief mới từ ${currentUser.name}\n• SKU: ${sku} — ${title}\n• Thị trường: ${market||'—'}\n• Link: ${APP_URL}`);
+  showLoading(false);
+  closeBriefForm();
+  renderBriefs();
+}
+
+// ══════════════════════════════════════════
+// BRIEF DETAIL
+// ══════════════════════════════════════════
+function openBriefDetail(id) {
+  const briefs = getBriefs();
+  const b = briefs.find(x => x.id === id);
+  if (!b) return;
+  currentBriefId = id;
+
+  document.getElementById('bdTitle').textContent = b.title;
+  document.getElementById('bdSku').textContent = b.sku || '—';
+  document.getElementById('bdMarket').textContent = b.market || '—';
+  document.getElementById('bdBy').textContent = `Tạo bởi ${b.createdBy} · ${fmtDate(b.createdAt)}`;
+  document.getElementById('bdOutline').textContent = b.outline || '—';
+  document.getElementById('bdApproach').textContent = b.approach || '—';
+  document.getElementById('bdMeta').textContent = '';
+
+  // Status badge
+  const isDone = b.status === 'done';
+  const claimers = b.claimers || [];
+  const stEl = document.getElementById('bdStatus');
+  stEl.className = 'brief-status-badge ' + (isDone ? 'bs-done' : claimers.length ? 'bs-claimed' : 'bs-open');
+  stEl.textContent = isDone ? '✅ Hoàn thành' : claimers.length ? '🔧 Đang làm' : '⏳ Chưa nhận';
+
+  // Keywords
+  const kws = (b.keywords||'').split(',').filter(Boolean);
+  const kwWrap = document.getElementById('bdKeywordsWrap');
+  if (kws.length) {
+    kwWrap.style.display = 'block';
+    document.getElementById('bdKeywords').innerHTML = kws.map(k=>`<span class="brief-keyword">${k.trim()}</span>`).join('');
+  } else { kwWrap.style.display = 'none'; }
+
+  // Claimers list
+  const claimersEl = document.getElementById('bdClaimersList');
+  claimersEl.innerHTML = claimers.length
+    ? claimers.map(c=>`<span class="brief-claimer-tag">${c}</span>`).join('')
+    : `<span style="font-size:12px;color:var(--text3)">Chưa ai nhận</span>`;
+
+  // Edit / Delete — Adser + LONG
+  const canManage = currentUser.role === 'adser' || currentUser.isLeader;
+  document.getElementById('btnEditBrief').style.display = canManage ? 'flex' : 'none';
+  document.getElementById('btnDeleteBrief').style.display = canManage ? 'flex' : 'none';
+
+  // Claim button — only creators
+  const isCreator = currentUser.role === 'creator';
+  const canCreate = currentUser.role === 'adser' || currentUser.isLeader;
+  const claimBtn = document.getElementById('btnClaimBrief');
+  if (isCreator && !isDone) {
+    claimBtn.style.display = 'flex';
+    const hasClaimed = claimers.includes(currentUser.name);
+    claimBtn.textContent = hasClaimed ? '🔙 Bỏ nhận' : '✋ Nhận brief';
+    claimBtn.style.background = hasClaimed ? 'var(--red-dim)' : 'var(--accent-dim)';
+    claimBtn.style.color = hasClaimed ? 'var(--red)' : 'var(--accent)';
+    claimBtn.style.border = '1px solid ' + (hasClaimed ? 'rgba(255,95,95,0.3)' : 'rgba(200,241,53,0.3)');
+  } else {
+    claimBtn.style.display = 'none';
+  }
+
+  // Creator upload section
+  const uploadSection = document.getElementById('bdCreatorUpload');
+  const hasClaimed = claimers.includes(currentUser.name);
+  if (isCreator && hasClaimed) {
+    uploadSection.style.display = 'block';
+    const myCompletion = (b.completions || {})[currentUser.name];
+    const doneResult = document.getElementById('bdDoneResult');
+    if (myCompletion) {
+      doneResult.style.display = 'block';
+      document.querySelector('#bdCreatorUpload > div:nth-child(2)').style.display = 'none';
+      const vid = myCompletion.videoUrl;
+      document.getElementById('bdResultVideo').innerHTML = vid
+        ? `<a href="${vid}" target="_blank" style="color:var(--blue);font-size:12px;font-weight:700">↗ Xem video trên Drive</a>`
+        : '';
+      document.getElementById('bdResultScript').textContent = myCompletion.script || '';
+      document.getElementById('bdResultNote').textContent = myCompletion.note ? `📝 ${myCompletion.note}` : '';
+    } else {
+      doneResult.style.display = 'none';
+      const uploadForm = document.querySelector('#bdCreatorUpload > div:nth-child(2)');
+      if (uploadForm) uploadForm.style.display = 'flex';
+      ['bdVideo','bdScript','bdNote'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    }
+  } else {
+    uploadSection.style.display = 'none';
+  }
+
+  document.getElementById('briefDetailModal').classList.add('open');
+}
+
+function closeBriefDetail() {
+  document.getElementById('briefDetailModal').classList.remove('open');
+  currentBriefId = null;
+}
+
+async function toggleClaimBrief() {
+  if (!currentBriefId) return;
+  const b = getBriefs().find(x => x.id === currentBriefId);
+  if (!b) return;
+  if (!b.claimers) b.claimers = [];
+  const idx = b.claimers.indexOf(currentUser.name);
+  if (idx >= 0) {
+    b.claimers.splice(idx, 1);
+  } else {
+    b.claimers.push(currentUser.name);
+    await larkSend(`✋ ${currentUser.name} nhận brief\n• SKU: ${b.sku} — ${b.title}\n• Link: ${APP_URL}`);
+  }
+  showLoading(true);
+  await updateBriefRemote(b);
+  showLoading(false);
+  closeBriefDetail();
+  renderBriefs();
+  renderPlan();
+}
+
+async function submitBriefCompletion() {
+  if (!currentBriefId) return;
+  const b = getBriefs().find(x => x.id === currentBriefId);
+  if (!b) return;
+  const videoUrl = document.getElementById('bdVideo').value.trim();
+  const script = document.getElementById('bdScript').value.trim();
+  const note = document.getElementById('bdNote').value.trim();
+  if (!videoUrl) { alert('Cần nhập link video Google Drive.'); return; }
+
+  showLoading(true);
+
+  // 1. Lưu completion vào brief
+  if (!b.completions) b.completions = {};
+  b.completions[currentUser.name] = { videoUrl, script, note, completedAt: Date.now() };
+  b.status = 'done';
+  await updateBriefRemote(b);
+
+  // 2. Tự động tạo creative card — chỉ adser tạo brief mới thấy
+  // Dùng adserStatuses: set pending cho adser đó, 'hidden' cho người khác
+  const allAdsers = getMembers().filter(m => m.role === 'adser');
+  const adserStatuses = {};
+  allAdsers.forEach(a => {
+    // Chỉ adser tạo brief mới thấy (pending), còn lại set 'hidden'
+    adserStatuses[a.name] = (a.name === b.createdBy || a.isLeader) ? 'pending' : 'hidden';
+  });
+
+  const card = {
+    id: genId(),
+    title: `${b.sku} — ${b.title}`,
+    creator: currentUser.name,
+    videoUrl,
+    idea: note || b.outline || '',
+    script,
+    tags: [b.sku, b.market].filter(Boolean),
+    market: b.market || '',
+    sku: b.sku,
+    status: 'pending',
+    adserStatuses,
+    pitches: [],
+    rejectVotes: [],
+    createdAt: Date.now(),
+    briefId: b.id  // liên kết về brief gốc
+  };
+
+  await saveNewCreative(card);
+
+  // 3. Lark notify
+  await larkSend(`✅ ${currentUser.name} hoàn thành brief!\n• SKU: ${b.sku} — ${b.title}\n• Video: ${videoUrl}\n• Card mới đã tạo cho ${b.createdBy}\n• Link: ${getCardLink(card.id)}`);
+
+  showLoading(false);
+  closeBriefDetail();
+  renderBriefs();
+  renderPlan();
+  renderCards();
+  renderStats();
+}
+
+// ══════════════════════════════════════════
+// PLAN PAGE
+// ══════════════════════════════════════════
+function setPlanFilter(f) {
+  planFilter = f;
+  ['all','todo','done'].forEach(x => {
+    document.getElementById('pf' + x.charAt(0).toUpperCase() + x.slice(1))?.classList.toggle('active', x === f);
+  });
+  renderPlan();
+}
+
+function renderPlan() {
+  const isCreator = currentUser.role === 'creator';
+  const planList = document.getElementById('planList');
+  const sub = document.getElementById('planSub');
+
+  // Adser không có Plan page riêng
+  if (!isCreator && !currentUser.isLeader) {
+    planList.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div>Trang Plan dành cho Creators.</div></div>`;
+    sub.textContent = '';
+    return;
+  }
+
+  const briefs = getBriefs();
+
+  // Creator thấy TẤT CẢ briefs (không cần claim trước)
+  // LONG thấy tất cả + trạng thái từng người
+  let myBriefs = briefs;
+
+  if (planFilter === 'todo') myBriefs = myBriefs.filter(b => {
+    if (currentUser.isLeader) return b.status !== 'done';
+    const done = (b.completions||{})[currentUser.name]?.completedAt;
+    return !done;
+  });
+  if (planFilter === 'done') myBriefs = myBriefs.filter(b => {
+    if (currentUser.isLeader) return b.status === 'done';
+    return !!(b.completions||{})[currentUser.name]?.completedAt;
+  });
+
+  sub.textContent = currentUser.isLeader
+    ? `Tổng quan tất cả briefs (${myBriefs.length})`
+    : `${briefs.length} brief cần hoàn thành`;
+
+  if (!myBriefs.length) {
+    planList.innerHTML = `<div class="empty-state"><div class="empty-icon">🎉</div><div>Không có brief nào ở đây.</div></div>`;
+    return;
+  }
+
+  planList.innerHTML = myBriefs.map(b => {
+    const myDone = !!(b.completions||{})[currentUser.name]?.completedAt;
+    const isDone = currentUser.isLeader ? b.status === 'done' : myDone;
+    const claimers = b.claimers || [];
+    const hasClaimed = claimers.includes(currentUser.name);
+    return `
+    <div class="plan-item ${isDone?'done':''}" onclick="openBriefDetail('${b.id}')">
+      <div class="plan-check">${isDone?'✓':''}</div>
+      <div class="plan-body">
+        <div class="plan-sku">${b.sku||'—'}</div>
+        <div class="plan-name">${b.title}</div>
+        <div class="plan-by">
+          Brief bởi ${b.createdBy} · ${fmtDate(b.createdAt)}
+          ${isCreator && hasClaimed ? ' · <span style="color:var(--accent);font-weight:700">Đang nhận</span>' : ''}
+          ${currentUser.isLeader && claimers.length ? ' · ' + claimers.join(', ') : ''}
+        </div>
+      </div>
+      ${b.market ? `<span class="plan-market">${b.market}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── BRIEF EDIT ──
+function openBriefEdit() {
+  const b = getBriefs().find(x => x.id === currentBriefId);
+  if (!b) return;
+  document.getElementById('beSku').value = b.sku || '';
+  document.getElementById('beTitle').value = b.title || '';
+  document.getElementById('beMarket').value = b.market || '';
+  document.getElementById('beOutline').value = b.outline || '';
+  document.getElementById('beApproach').value = b.approach || '';
+  document.getElementById('beKeywords').value = b.keywords || '';
+  document.getElementById('briefEditModal').classList.add('open');
+}
+function closeBriefEdit() { document.getElementById('briefEditModal').classList.remove('open'); }
+
+async function submitBriefEdit() {
+  const b = getBriefs().find(x => x.id === currentBriefId);
+  if (!b) return;
+  const sku = document.getElementById('beSku').value.trim().toUpperCase();
+  const title = document.getElementById('beTitle').value.trim();
+  if (!sku || !title) { alert('Cần điền SKU và Tên brief.'); return; }
+  b.sku      = sku;
+  b.title    = title;
+  b.market   = document.getElementById('beMarket').value;
+  b.outline  = document.getElementById('beOutline').value.trim();
+  b.approach = document.getElementById('beApproach').value.trim();
+  b.keywords = document.getElementById('beKeywords').value.trim();
+  showLoading(true);
+  await updateBriefRemote(b);
+  showLoading(false);
+  closeBriefEdit();
+  closeBriefDetail();
+  openBriefDetail(b.id);
+  renderBriefs();
+}
+
+async function deleteBrief() {
+  if (!currentBriefId) return;
+  if (!confirm('Xóa brief này? Không thể hoàn tác.')) return;
+  showLoading(true);
+  await apiPost({action:'deleteBrief', data:{id: currentBriefId}});
+  _briefs = getBriefs().filter(b => b.id !== currentBriefId);
+  showLoading(false);
+  closeBriefDetail();
+  renderBriefs();
+  renderPlan();
+}
+
+// ── BRIEF EDIT MODAL CLOSE ON OVERLAY ──
+document.addEventListener('DOMContentLoaded', function() {
+  ['briefFormModal','briefDetailModal','briefEditModal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function(e) {
+      if (e.target === this) {
+        if (id === 'briefFormModal') closeBriefForm();
+        else if (id === 'briefEditModal') closeBriefEdit();
+        else closeBriefDetail();
+      }
+    });
+  });
+});
+
+
+async function boot(){
+  await loadMembers();
+  const session=JSON.parse(localStorage.getItem('cb_session')||'null');
+  if(session&&session.name){
+    const member=getMemberByName(session.name);
+    if(member){
+      currentUser=member;
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('appScreen').style.display='block';
+      await initApp();
+      // Deep link: mở card nếu có ?card=ID trong URL
+      const cardId=new URLSearchParams(window.location.search).get('card');
+      if(cardId){
+        const c=getData().find(x=>x.id===cardId);
+        if(c) openDetail(cardId);
+      }
+      return;
+    }
+  }
+  // Lưu deep link để mở sau khi login
+  localStorage.setItem('cb_pending_card', new URLSearchParams(window.location.search).get('card')||'');
+  buildLoginSelect();
+}
+boot();
+</script>
+<!-- EDIT CARD MODAL -->
+<div class="modal-overlay" id="editCardModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div style="flex:1"><div class="modal-title">✏️ Edit Creative</div><div class="modal-meta">Chỉ edit được khi ở trạng thái Pending</div></div>
+      <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeEditCard()">✕</button>
+    </div>
+    <div class="upload-form">
+      <div class="form-row"><div class="form-label">Tên Creative</div><input class="form-input" id="eTitle" placeholder="Tên creative"></div>
+      <div class="form-row"><div class="form-label">Link Video (Google Drive)</div><input class="form-input" id="eVideo" placeholder="https://drive.google.com/file/d/..."></div>
+      <div class="form-row"><div class="form-label">Ý tưởng / Angle</div><textarea class="form-textarea" id="eIdea" placeholder="Mô tả ý tưởng..."></textarea></div>
+      <div class="form-row"><div class="form-label">Script (Tiếng Việt)</div><textarea class="form-textarea" id="eScript" placeholder="Script tiếng Việt..." style="min-height:100px"></textarea></div>
+      <div class="form-row"><div class="form-label">Tags (cách nhau bởi dấu phẩy)</div><input class="form-input" id="eTags" placeholder="VD: pain-hook, italy"></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeEditCard()">Hủy</button>
+        <button class="btn btn-primary" onclick="submitEditCard()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIEF FORM MODAL (tạo brief mới) -->
+<div class="modal-overlay" id="briefFormModal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div style="flex:1"><div class="modal-title">📋 Tạo Content Brief</div><div class="modal-meta">Yêu cầu content từ Creators</div></div>
+      <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeBriefForm()">✕</button>
+    </div>
+    <div class="upload-form">
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="form-label">SKU</div>
+          <input class="form-input" id="bSku" placeholder="VD: TEPPAN01">
+        </div>
+        <div class="form-row">
+          <div class="form-label">Thị trường</div>
+          <select class="form-input" id="bMarket">
+            <option value="">— Chọn —</option>
+            <option>ITALY</option><option>SPAIN</option><option>PORTUGAL</option>
+            <option>HUNGARY</option><option>POLAND</option><option>CZECH</option>
+            <option>SLOVAKIA</option><option>MEXICO</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Tên brief / Mô tả ngắn</div>
+        <input class="form-input" id="bTitle" placeholder="VD: Hook Pain — Bếp bừa bộn">
+      </div>
+      <div class="form-row">
+        <div class="form-label">Outline video (cấu trúc)</div>
+        <textarea class="form-textarea" id="bOutline" style="min-height:140px;resize:vertical" placeholder="VD:&#10;- Hook 3s: Cảnh bếp bừa bộn&#10;- Content: Demo sản phẩm làm sạch&#10;- CTA: Đặt hàng COD"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Hướng tiếp cận / Angle</div>
+        <textarea class="form-textarea" id="bApproach" style="min-height:120px;resize:vertical" placeholder="VD: Dùng angle sợ hãi + tiết kiệm thời gian. Không dùng angle hài hước."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Keywords cần nhấn mạnh (cách nhau bởi dấu phẩy)</div>
+        <input class="form-input" id="bKeywords" placeholder="VD: COD, gratis, veloce, facile">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeBriefForm()">Hủy</button>
+        <button class="btn btn-primary" onclick="submitBriefForm()">Tạo Brief</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIEF DETAIL MODAL (xem brief + creator upload) -->
+<div class="modal-overlay" id="briefDetailModal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <div style="flex:1">
+        <div class="modal-title" id="bdTitle"></div>
+        <div class="modal-meta"><span id="bdMeta"></span></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" id="btnClaimBrief" onclick="toggleClaimBrief()" style="font-size:12px;padding:6px 12px"></button>
+        <button class="btn btn-ghost" id="btnEditBrief" onclick="openBriefEdit()" style="display:none;font-size:12px;padding:6px 12px">✏️ Edit</button>
+        <button class="btn" id="btnDeleteBrief" onclick="deleteBrief()" style="display:none;font-size:12px;padding:6px 12px;background:var(--red-dim);border:1px solid rgba(255,95,95,0.3);color:var(--red)">🗑 Xóa</button>
+        <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeBriefDetail()">✕</button>
+      </div>
+    </div>
+    <div class="brief-modal-body">
+      <!-- Brief info -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span class="brief-sku-badge" id="bdSku"></span>
+        <span class="brief-market" id="bdMarket" style="font-size:11px;font-weight:800;padding:3px 10px;border-radius:4px;background:var(--blue-dim);color:var(--blue)"></span>
+        <span class="brief-status-badge" id="bdStatus"></span>
+        <span style="font-size:11px;color:var(--text3)" id="bdBy"></span>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-label">Outline video</div>
+        <div class="brief-content-box" id="bdOutline"></div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-label">Hướng tiếp cận</div>
+        <div class="brief-content-box" id="bdApproach"></div>
+      </div>
+      <div class="brief-section" id="bdKeywordsWrap">
+        <div class="brief-section-label">Keywords cần nhấn</div>
+        <div class="brief-keywords" id="bdKeywords"></div>
+      </div>
+
+      <!-- Claimers -->
+      <div id="bdClaimersWrap">
+        <div class="brief-section-label" style="margin-bottom:8px">Creator đang nhận</div>
+        <div id="bdClaimersList" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <!-- Creator upload section — hiện khi creator đã claim -->
+      <div id="bdCreatorUpload" style="display:none">
+        <div style="font-size:13px;font-weight:800;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          🎬 Upload kết quả
+          <span style="font-size:11px;font-weight:400;color:var(--text3)">Điền sau khi đã hoàn thành video</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="form-row"><div class="form-label">Link Video (Google Drive)</div><input class="form-input" id="bdVideo" placeholder="https://drive.google.com/file/d/..."></div>
+          <div class="form-row"><div class="form-label">Script tiếng Việt</div><textarea class="form-textarea" id="bdScript" placeholder="Script..." style="min-height:80px"></textarea></div>
+          <div class="form-row"><div class="form-label">Ghi chú thêm</div><textarea class="form-textarea" id="bdNote" placeholder="Ghi chú cho Adser..."></textarea></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button class="btn btn-primary" onclick="submitBriefCompletion()">✅ Hoàn thành & Noti Lark</button>
+          </div>
+        </div>
+        <!-- Nếu đã done: hiện result -->
+        <div id="bdDoneResult" style="display:none;margin-top:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px">
+          <div class="brief-section-label" style="margin-bottom:8px;color:var(--green)">✅ Đã hoàn thành</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div id="bdResultVideo"></div>
+            <div id="bdResultScript" style="font-size:12px;color:var(--text2);white-space:pre-wrap;line-height:1.7"></div>
+            <div id="bdResultNote" style="font-size:12px;color:var(--text3);font-style:italic"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIEF EDIT MODAL -->
+<div class="modal-overlay" id="briefEditModal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div style="flex:1"><div class="modal-title">✏️ Edit Brief</div></div>
+      <button class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1" onclick="closeBriefEdit()">✕</button>
+    </div>
+    <div class="upload-form">
+      <div class="form-grid">
+        <div class="form-row"><div class="form-label">SKU</div><input class="form-input" id="beSku" placeholder="VD: TEPPAN01"></div>
+        <div class="form-row"><div class="form-label">Thị trường</div>
+          <select class="form-input" id="beMarket">
+            <option value="">— Chọn —</option>
+            <option>ITALY</option><option>SPAIN</option><option>PORTUGAL</option>
+            <option>HUNGARY</option><option>POLAND</option><option>CZECH</option>
+            <option>SLOVAKIA</option><option>MEXICO</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row"><div class="form-label">Tên brief</div><input class="form-input" id="beTitle" placeholder="VD: Hook Pain — Bếp bừa bộn"></div>
+      <div class="form-row"><div class="form-label">Outline video</div><textarea class="form-textarea" id="beOutline" style="min-height:140px;resize:vertical"></textarea></div>
+      <div class="form-row"><div class="form-label">Hướng tiếp cận</div><textarea class="form-textarea" id="beApproach" style="min-height:120px;resize:vertical"></textarea></div>
+      <div class="form-row"><div class="form-label">Keywords (cách nhau bởi dấu phẩy)</div><input class="form-input" id="beKeywords"></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="closeBriefEdit()">Hủy</button>
+        <button class="btn btn-primary" onclick="submitBriefEdit()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
