@@ -1806,6 +1806,39 @@ async function toggleClaimBrief() {
   renderPlan();
 }
 
+async function undoBriefCompletion() {
+  if (!currentBriefId) return;
+  if (!confirm('Hoàn tác? Brief về lại chưa xong và card video đã tạo sẽ bị xóa.')) return;
+  const b = getBriefs().find(x => x.id === currentBriefId);
+  if (!b) return;
+
+  showLoading(true);
+
+  // 1. Xóa card creative đã tạo từ brief này (của creator hiện tại)
+  const relatedCard = getData().find(c =>
+    c.briefId === currentBriefId && c.creator === currentUser.name
+  );
+  if (relatedCard) {
+    _creatives = getData().filter(c => c.id !== relatedCard.id);
+    await apiPost({action:'deleteCreative', data:{id: relatedCard.id}});
+  }
+
+  // 2. Reset completion trong brief
+  if (b.completions) delete b.completions[currentUser.name];
+  const anyDone = b.claimers && b.claimers.some(c => (b.completions||{})[c]?.completedAt);
+  if (!anyDone) b.status = 'open';
+  await updateBriefRemote(b);
+
+  showLoading(false);
+  const tempId = currentBriefId;
+  closeBriefDetail();
+  openBriefDetail(tempId);
+  renderBriefs();
+  renderPlan();
+  renderCards();
+  renderStats();
+}
+
 async function submitBriefCompletion() {
   if (!currentBriefId) return;
   const b = getBriefs().find(x => x.id === currentBriefId);
@@ -2149,7 +2182,10 @@ boot();
         </div>
         <!-- Nếu đã done: hiện result -->
         <div id="bdDoneResult" style="display:none;margin-top:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px">
-          <div class="brief-section-label" style="margin-bottom:8px;color:var(--green)">✅ Đã hoàn thành</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div class="brief-section-label" style="color:var(--green)">✅ Đã hoàn thành</div>
+            <button class="btn btn-ghost" onclick="undoBriefCompletion()" style="font-size:11px;padding:4px 10px;color:var(--yellow);border:1px solid rgba(255,200,0,0.3);background:rgba(255,200,0,0.08)">↩ Hoàn tác</button>
+          </div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div id="bdResultVideo"></div>
             <div id="bdResultScript" style="font-size:12px;color:var(--text2);white-space:pre-wrap;line-height:1.7"></div>
