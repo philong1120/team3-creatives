@@ -81,7 +81,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .btn-ghost:hover{border-color:var(--border2);color:var(--text);}
 
 /* ── CARDS ── */
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.cards-grid{display:flex;flex-direction:column;gap:0;}
 .creative-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;}
 .creative-card:hover{border-color:var(--border2);transform:translateY(-2px);}
 .creative-card.status-picked{border-color:rgba(76,222,138,0.3);}
@@ -973,6 +973,15 @@ function renderStats(){
     <div class="stat-item"><div class="stat-dot" style="background:var(--blue)"></div><span class="stat-num">${c.oncamp}</span> On Camp</div>`;
 }
 
+function toggleSKUGroup(gid){
+  const el=document.getElementById(gid);
+  const icon=document.getElementById(gid+'-icon');
+  if(!el) return;
+  const collapsed=el.style.display==='none';
+  el.style.display=collapsed?'grid':'none';
+  if(icon) icon.textContent=collapsed?'▼':'▶';
+}
+
 // ── RENDER CARDS ──
 function renderCards(){
   const visible=getVisibleCards();
@@ -984,16 +993,33 @@ function renderCards(){
     return;
   }
 
-  // Group by SKU for tất cả role
+  // Group by SKU for tất cả role — collapsible
   let html='';
   let lastSKU='';
+  let groupCards='';
+  const groups=[];
   visible.forEach(c=>{
     const sku=getSKU(c.title);
     if(sku!==lastSKU){
-      html+=`<div style="grid-column:1/-1;margin:${lastSKU?'16px':0} 0 6px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${sku}</span></div>`;
-      lastSKU=sku;
+      if(lastSKU) groups.push({sku:lastSKU, cards:groupCards});
+      lastSKU=sku; groupCards='';
     }
-    html+=renderCard(c,isLeaderOrCreator);
+    groupCards+=renderCard(c,isLeaderOrCreator);
+  });
+  if(lastSKU) groups.push({sku:lastSKU, cards:groupCards});
+
+  groups.forEach(g=>{
+    const gid='grp-'+g.sku.replace(/[^a-z0-9]/gi,'');
+    html+=`
+    <div style="grid-column:1/-1;margin-top:12px">
+      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none" onclick="toggleSKUGroup('${gid}')">
+        <span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${g.sku}</span>
+        <span id="${gid}-icon" style="font-size:10px;color:var(--text3)">▼</span>
+      </div>
+    </div>
+    <div id="${gid}" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:4px">
+      ${g.cards}
+    </div>`;
   });
   grid.innerHTML=html;
 }
