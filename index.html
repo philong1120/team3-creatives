@@ -347,6 +347,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
         <div class="toolbar-title" id="toolbarTitle">Creative Library</div>
         <div class="toolbar-sub" id="toolbarSub"></div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;flex:1;max-width:260px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:0 10px">
+        <span style="color:var(--text3);font-size:13px">🔍</span>
+        <input id="skuSearch" type="text" placeholder="Tìm SKU hoặc tên..." style="background:transparent;border:none;outline:none;color:var(--text1);font-size:13px;width:100%;font-family:var(--font)" oninput="renderCards()">
+      </div>
       <div class="filter-tabs" id="filterTabs"></div>
       <button class="btn btn-primary" id="uploadBtn" onclick="openUpload()" style="display:none">+ Upload</button>
     </div>
@@ -911,10 +915,16 @@ function setFilter(f){
 // ── VISIBLE CARDS ──
 function getVisibleCards(){
   const all=getData();
+  const q=(document.getElementById('skuSearch')?.value||'').trim().toLowerCase();
+
+  function applySearch(arr){
+    if(!q) return arr;
+    return arr.filter(c=>(c.title||'').toLowerCase().includes(q)||(c.sku||'').toLowerCase().includes(q));
+  }
 
   // Creator: chỉ thấy card của mình
   if(currentUser.role==='creator' && !currentUser.isLeader){
-    return all.filter(c=>c.creator===currentUser.name)
+    return applySearch(all.filter(c=>c.creator===currentUser.name))
               .sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
   }
 
@@ -923,7 +933,7 @@ function getVisibleCards(){
     let visible=all;
     if(currentFilter==='brief') visible=all.filter(c=>!!c.briefId);
     else if(currentFilter!=='all') visible=all.filter(c=>(c.status||'pending')===currentFilter);
-    return visible.sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
+    return applySearch(visible).sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
   }
 
   // Adser: filter by their own status, ẩn card bị set 'hidden'
@@ -932,7 +942,7 @@ function getVisibleCards(){
   if(currentFilter==='all') filtered=visible;
   else if(currentFilter==='brief') filtered=visible.filter(c=>!!c.briefId);
   else filtered=visible.filter(c=>getStatusForAdser(c,currentUser.name)===currentFilter);
-  return filtered.sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
+  return applySearch(filtered).sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
 }
 
 function getStatusForAdser(creative,adserName){
