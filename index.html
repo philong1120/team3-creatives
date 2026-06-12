@@ -343,15 +343,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 
   <main class="main" id="pageCreatives">
     <div class="toolbar">
-      <div>
+      <div style="min-width:160px">
         <div class="toolbar-title" id="toolbarTitle">Creative Library</div>
         <div class="toolbar-sub" id="toolbarSub"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;flex:1;max-width:260px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:0 10px">
+      <div style="display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;min-width:200px">
         <span style="color:var(--text3);font-size:13px">🔍</span>
         <input id="skuSearch" type="text" placeholder="Tìm SKU hoặc tên..." style="background:transparent;border:none;outline:none;color:var(--text1);font-size:13px;width:100%;font-family:var(--font)" oninput="renderCards()">
       </div>
-      <div class="filter-tabs" id="filterTabs"></div>
+      <div class="filter-tabs" id="filterTabs" style="flex:1"></div>
       <button class="btn btn-primary" id="uploadBtn" onclick="openUpload()" style="display:none">+ Upload</button>
     </div>
     <div class="cards-grid" id="cardsGrid"></div>
