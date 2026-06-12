@@ -928,9 +928,11 @@ function getVisibleCards(){
 
   // Adser: filter by their own status, ẩn card bị set 'hidden'
   const visible=all.filter(c=>getStatusForAdser(c,currentUser.name)!=='hidden');
-  if(currentFilter==='all') return visible;
-  if(currentFilter==='brief') return visible.filter(c=>!!c.briefId);
-  return visible.filter(c=>getStatusForAdser(c,currentUser.name)===currentFilter);
+  let filtered;
+  if(currentFilter==='all') filtered=visible;
+  else if(currentFilter==='brief') filtered=visible.filter(c=>!!c.briefId);
+  else filtered=visible.filter(c=>getStatusForAdser(c,currentUser.name)===currentFilter);
+  return filtered.sort((a,b)=>getSKU(a.title).localeCompare(getSKU(b.title)));
 }
 
 function getStatusForAdser(creative,adserName){
@@ -1755,7 +1757,31 @@ function openBriefDetail(id) {
   // Creator upload section
   const uploadSection = document.getElementById('bdCreatorUpload');
   const hasClaimed = claimers.includes(currentUser.name);
-  if (isCreator && hasClaimed) {
+
+  // LONG thấy tất cả completions dạng read-only + nút hoàn tác
+  if (currentUser.isLeader) {
+    const completions = b.completions || {};
+    const hasAnyCompletion = Object.keys(completions).length > 0;
+    if (hasAnyCompletion) {
+      uploadSection.style.display = 'block';
+      // Ẩn upload form, chỉ hiện done results
+      const uploadForm = document.querySelector('#bdCreatorUpload > div:nth-child(2)');
+      if (uploadForm) uploadForm.style.display = 'none';
+      const doneResult = document.getElementById('bdDoneResult');
+      doneResult.style.display = 'block';
+      // Hiện completion của creator đầu tiên (hoặc loop nếu cần)
+      const firstCreator = Object.keys(completions)[0];
+      const myCompletion = completions[firstCreator];
+      const vid = myCompletion?.videoUrl;
+      document.getElementById('bdResultVideo').innerHTML = vid
+        ? `<a href="${vid}" target="_blank" style="color:var(--blue);font-size:12px;font-weight:700">↗ Xem video trên Drive (by ${firstCreator})</a>`
+        : '';
+      document.getElementById('bdResultScript').textContent = myCompletion?.script || '';
+      document.getElementById('bdResultNote').textContent = myCompletion?.note ? `📝 ${myCompletion.note}` : '';
+    } else {
+      uploadSection.style.display = 'none';
+    }
+  } else if (isCreator && hasClaimed) {
     uploadSection.style.display = 'block';
     const myCompletion = (b.completions || {})[currentUser.name];
     const doneResult = document.getElementById('bdDoneResult');
