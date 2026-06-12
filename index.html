@@ -984,22 +984,18 @@ function renderCards(){
     return;
   }
 
-  // Group by SKU for LONG and Creator
-  if(isLeaderOrCreator){
-    let html='';
-    let lastSKU='';
-    visible.forEach(c=>{
-      const sku=getSKU(c.title);
-      if(sku!==lastSKU){
-        html+=`<div style="grid-column:1/-1;margin:${lastSKU?'16px':0} 0 6px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${sku}</span></div>`;
-        lastSKU=sku;
-      }
-      html+=renderCard(c,isLeaderOrCreator);
-    });
-    grid.innerHTML=html;
-  } else {
-    grid.innerHTML=visible.map(c=>renderCard(c,false)).join('');
-  }
+  // Group by SKU for tất cả role
+  let html='';
+  let lastSKU='';
+  visible.forEach(c=>{
+    const sku=getSKU(c.title);
+    if(sku!==lastSKU){
+      html+=`<div style="grid-column:1/-1;margin:${lastSKU?'16px':0} 0 6px"><span style="font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);text-transform:uppercase">${sku}</span></div>`;
+      lastSKU=sku;
+    }
+    html+=renderCard(c,isLeaderOrCreator);
+  });
+  grid.innerHTML=html;
 }
 
 function renderCard(c,showAdserStatuses){
